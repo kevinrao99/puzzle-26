@@ -342,7 +342,7 @@ test("GREEN can solve while grading is still running, without cancelling the upl
   });
   await login(page);
   await upload(page, "teams");
-  await page.waitForFunction(() => document.querySelector(".upload-feedback").textContent.includes("Running tests"));
+  await page.waitForFunction(() => document.querySelector(".upload-feedback").textContent === "Running...");
   assert.equal(await page.locator("#puzzle-answer").isEnabled(), true);
   assert.equal(await page.locator("#puzzle-answer-form button").isEnabled(), true);
   await page.locator("#puzzle-answer").fill("green");
@@ -423,7 +423,7 @@ test("clear local progress removes grading data and sign-in, including active po
   });
   await login(page);
   await upload(page, "teams");
-  await page.waitForFunction(() => document.querySelector(".upload-feedback").textContent.includes("Running tests"));
+  await page.waitForFunction(() => document.querySelector(".upload-feedback").textContent === "Running...");
   page.once("dialog", (dialog) => dialog.accept());
   await page.locator("#help-button").click();
   await page.locator("#clear-state").click();

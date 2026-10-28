@@ -8,7 +8,7 @@ window.PuzzleGrading = (() => {
     uploading: "Uploading…",
     queued: "Queued...",
     compiling: "Compiling…",
-    running: "Running tests…",
+    running: "Running...",
     scoring: "Calculating score…",
     compile_error: "Compilation failed.",
     failed: "Grading failed.",
