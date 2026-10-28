@@ -9,9 +9,9 @@ window.PuzzleGrading = (() => {
     queued: "Queued...",
     compiling: "Compiling…",
     running: "Running...",
-    scoring: "Calculating score…",
+    scoring: "Finishing...",
     compile_error: "Compilation failed.",
-    failed: "Grading failed.",
+    failed: "Processing failed.",
     interrupted: "Upload interrupted before confirmation. Submit the file again to retry.",
   };
 
@@ -49,11 +49,11 @@ window.PuzzleGrading = (() => {
         const url = new URL(config.baseUrl);
         const localHttp = url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
         if ((url.protocol !== "https:" && !localHttp) || url.username || url.password || url.search || url.hash) {
-          throw new Error("Invalid grading server address.");
+          throw new Error("Invalid server address.");
         }
         baseUrl = url.href.replace(/\/$/, "");
       } catch {
-        configurationError = "The grading connection is unavailable. Please contact the hunt organizer.";
+        configurationError = "The server connection is unavailable. Please contact the hunt organizer.";
       }
     }
 
@@ -83,7 +83,7 @@ window.PuzzleGrading = (() => {
       if (session && !validSession(session)) {
         session = null;
         clearSession();
-        authMessage = "Your grading session expired. Enter your access code again.";
+        authMessage = "Your server session expired. Enter your access code again.";
       }
       return Boolean(session);
     }
@@ -95,8 +95,8 @@ window.PuzzleGrading = (() => {
     }
 
     async function request(path, { method = "GET", body, authenticated = true } = {}) {
-      if (!baseUrl) throw new Error("The grading server has not been connected yet.");
-      if (authenticated && !connected()) throw new Error("Enter your grading access code to continue.");
+      if (!baseUrl) throw new Error("The server has not been connected yet.");
+      if (authenticated && !connected()) throw new Error("Enter your access code to continue.");
       const controller = new AbortController();
       const abort = () => controller.abort();
       lifetime.signal.addEventListener("abort", abort, { once: true });
@@ -115,21 +115,21 @@ window.PuzzleGrading = (() => {
           if (authenticated) {
             session = null;
             clearSession();
-            authMessage = "Your grading session expired or was rejected. Connect again to continue.";
+            authMessage = "Your server session expired or was rejected. Connect again to continue.";
             notify();
           }
-          throw new Error(authenticated ? authMessage : "The grading access code was not accepted.");
+          throw new Error(authenticated ? authMessage : "The access code was not accepted.");
         }
         if (response.status === 413) throw new Error("This file exceeds the server’s upload limit.");
-        if (response.status === 429) throw new Error("The grader is busy. Please wait before trying again.");
-        if (!response.ok) throw new Error(`The grading server could not complete the request (${response.status}).`);
+        if (response.status === 429) throw new Error("The server is busy. Please wait before trying again.");
+        if (!response.ok) throw new Error(`The server could not complete the request (${response.status}).`);
         const data = await response.json();
-        if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("Invalid grading response.");
+        if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("Invalid server response.");
         return data;
       } catch (error) {
-        if (error.name === "AbortError") throw new Error("The grading request timed out. Please try checking its status again.");
-        if (error instanceof TypeError) throw new Error("Could not reach the grading server. Check your connection and try again.");
-        if (error instanceof SyntaxError) throw new Error("The grading server returned an unreadable response.");
+        if (error.name === "AbortError") throw new Error("The request timed out. Please try checking its status again.");
+        if (error instanceof TypeError) throw new Error("Could not reach the server. Check your connection and try again.");
+        if (error instanceof SyntaxError) throw new Error("The server returned an unreadable response.");
         throw error;
       } finally {
         clearTimeout(timeout);
@@ -160,11 +160,11 @@ window.PuzzleGrading = (() => {
           const data = await request(`/submissions/${encodeURIComponent(attempt.jobId)}`);
           if (destroyed) return;
           if (data.jobId !== attempt.jobId || (!PENDING.has(data.status) && !TERMINAL.has(data.status))) {
-            throw new Error("The grader returned an unexpected job response. Check its status again.");
+            throw new Error("The server returned an unexpected job response. Check its status again.");
           }
           if (data.status === "complete" &&
               (!Number.isFinite(data.score) || data.score < 0 || data.score > 100 || data.maximumScore !== 100)) {
-            throw new Error("The grader did not return a valid score out of 100. Check its status again.");
+            throw new Error("The server did not return a valid score out of 100. Check its status again.");
           }
           attempt.status = data.status;
           attempt.score = data.status === "complete" ? data.score : null;
@@ -173,7 +173,7 @@ window.PuzzleGrading = (() => {
           attempt.message = typeof data.message === "string" ? data.message.slice(0, 500) : "";
           notify(true);
           if (!PENDING.has(attempt.status)) return;
-          if (Date.now() >= deadline) throw new Error("Grading is taking longer than expected. Check its status again later.");
+          if (Date.now() >= deadline) throw new Error("This is taking longer than expected. Check its status again later.");
           await waitForPoll();
         }
       } catch (error) {
@@ -195,14 +195,14 @@ window.PuzzleGrading = (() => {
     async function restoreHistory() {
       if (!config.recoverHistory) return;
       const data = await request('/history');
-      if (!Array.isArray(data.submissions) || data.submissions.length > 102) throw new Error('The grader returned invalid submission history.');
+      if (!Array.isArray(data.submissions) || data.submissions.length > 102) throw new Error('The server returned invalid submission history.');
       const restored = {};
       for (const part of parts) {
         const rows = data.submissions.filter(item => item.task === part.taskId);
         if (rows.some(item => typeof item.jobId !== 'string' || !item.jobId ||
             (!PENDING.has(item.status) && !TERMINAL.has(item.status)) ||
             (item.status === 'complete' && (!Number.isFinite(item.score) || item.score < 0 || item.score > 100 || item.maximumScore !== 100)))) {
-          throw new Error('The grader returned invalid submission history.');
+          throw new Error('The server returned invalid submission history.');
         }
         restored[part.id] = normalizeAttempts(rows.map(item => ({ ...item, id: item.jobId })));
       }
@@ -218,7 +218,7 @@ window.PuzzleGrading = (() => {
       try {
         const data = await request("/login", { method: "POST", body: { accessCode }, authenticated: false });
         if (destroyed) return;
-        if (!validSession(data)) throw new Error("The grader did not return a valid session. Please contact the hunt organizer.");
+        if (!validSession(data)) throw new Error("The server did not return a valid session. Please contact the hunt organizer.");
         session = { baseUrl, token: data.token, expiresAt: data.expiresAt };
         try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch { /* Keep session in memory. */ }
         await restoreHistory();
@@ -240,7 +240,7 @@ window.PuzzleGrading = (() => {
     }
 
     async function submit(part, file) {
-      if (authBusy) throw new Error("Wait for grading sign-in to finish.");
+      if (authBusy) throw new Error("Wait for sign-in to finish.");
       if (hasFullScore(attempts[part.id])) throw new Error("This part already has a full score.");
       validateFile(file);
       let source;
@@ -250,7 +250,7 @@ window.PuzzleGrading = (() => {
       if (!source.trim()) throw new Error("The selected file contains no source code.");
       if (destroyed) return;
       if (hasFullScore(attempts[part.id])) return;
-      if (!connected()) throw new Error("Enter your grading access code to continue.");
+      if (!connected()) throw new Error("Enter your access code to continue.");
       const attempt = {
         id: crypto.randomUUID(), filename: file.name, submittedAt: new Date().toISOString(),
         jobId: null, status: "uploading", score: null, maximumScore: null, compileOutput: "", message: "",
@@ -264,7 +264,7 @@ window.PuzzleGrading = (() => {
         const data = await request("/submissions", { method: "POST", body: form });
         if (destroyed) return;
         if (typeof data.jobId !== "string" || !data.jobId || data.jobId.length > 200 || data.status !== "queued") {
-          throw new Error("The grader did not confirm the upload with a job ID.");
+          throw new Error("The server did not confirm the upload with a job ID.");
         }
         attempt.jobId = data.jobId;
         attempt.status = "queued";
@@ -299,21 +299,7 @@ window.PuzzleGrading = (() => {
         const result = document.createElement("p");
         result.textContent = `${attempt.filename} — ${describeAttempt(attempt)}`;
         item.append(result);
-        if (attempt.message) {
-          const message = document.createElement("p");
-          message.className = "submission-detail";
-          message.textContent = attempt.message;
-          item.append(message);
-        }
-        if (attempt.compileOutput) {
-          const details = document.createElement("details");
-          const summary = document.createElement("summary");
-          summary.textContent = "Compiler output";
-          const output = document.createElement("pre");
-          output.textContent = attempt.compileOutput;
-          details.append(summary, output);
-          item.append(details);
-        }
+        // Keep diagnostic data in saved history, but do not expose server details in the puzzle UI.
         list.append(item);
       }
       container.append(list);
@@ -321,7 +307,7 @@ window.PuzzleGrading = (() => {
 
     function mount(root) {
       root.innerHTML = `
-        <section class="panel grading-access" aria-label="Grading access">
+        <section class="panel grading-access" aria-label="Server access">
           <p class="grading-connection" role="status"></p>
           <form class="grading-login-form">
             <label for="grading-access-code">ACCESS CODE</label>
@@ -414,7 +400,7 @@ window.PuzzleGrading = (() => {
         const authenticated = connected();
         root.querySelector(".grading-access").hidden = parts.every((part) => hasFullScore(attempts[part.id]));
         connection.textContent = configurationError || (!baseUrl
-          ? "Grading will be available here once the server is connected."
+          ? "Uploads will be available here once the server is connected."
           : authMessage || (authenticated ? "Connected" : ""));
         connection.hidden = !connection.textContent;
         loginForm.hidden = !baseUrl || authenticated;

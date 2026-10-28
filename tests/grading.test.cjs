@@ -133,7 +133,8 @@ test("GREEN solves without grading or sign-in, rejects ANSWER, and leaves other 
   assert.equal(await page.locator("#grading-answer-notice").isVisible(), false);
   assert.equal(await page.getByText("The answer box unlocks when both parts score 100/100.", { exact: true }).count(), 0);
   assert.equal(await page.locator(".grading-login-form").isVisible(), false);
-  assert.match(await page.locator(".grading-connection").textContent(), /once the server is connected/);
+  assert.equal(await page.locator(".grading-connection").textContent(), "Uploads will be available here once the server is connected.");
+  assert.equal(await page.locator(".grading-access").getAttribute("aria-label"), "Server access");
   await chooseFile(page, "teams");
   assert.equal(await page.locator(".grading-part").first().locator("button[type=submit]").isDisabled(), true);
   await page.locator("#puzzle-answer").fill("ANSWER");
@@ -220,6 +221,7 @@ test("login and upload validation reject incorrect credentials and invalid files
   await page.locator("#grading-access-code").fill("wrong");
   await page.locator(".grading-login-form button").click();
   await page.waitForFunction(() => document.querySelector(".grading-connection").textContent.includes("not accepted"));
+  assert.equal(await page.locator(".grading-connection").textContent(), "The access code was not accepted.");
   await login(page);
   const section = page.locator(".grading-part").first();
   for (const [name, buffer, expected] of [
@@ -281,13 +283,19 @@ for (const failure of ["runtime failure", "compilation failure"]) {
     assert.equal(await page.locator("#puzzle-answer").isEnabled(), true);
     assert.equal(await page.locator(".revealed-answer").count(), 0);
     if (compilation) {
-      assert.match(await section.textContent(), /error: invalid C\+\+/);
+      assert.doesNotMatch(await section.textContent(), /Compilation failed|error: invalid C\+\+/);
+      assert.equal(await section.locator("details, .submission-detail").count(), 0);
       assert.equal(await section.locator("img").count(), 0);
       assert.equal(await page.evaluate(() => window.uploadXss), undefined);
+      const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)).puzzles["blue-4"].grading.teams.at(-1), STORAGE_KEY);
+      assert.equal(saved.message, "Compilation failed.");
+      assert.match(saved.compileOutput, /error: invalid C\+\+/);
     }
     await page.reload();
     await page.waitForSelector("#teams-file");
     await waitForGrade(page, "teams", 0);
+    assert.equal(await section.locator("details, .submission-detail").count(), 0);
+    assert.doesNotMatch(await section.textContent(), /error: invalid C\+\+/);
     assert.equal(await page.locator("#teams-file").isEnabled(), true);
     await upload(page, "teams", "retry.cpp");
     await page.waitForFunction(() => JSON.parse(localStorage.getItem("puzzle-26:v1:progress")).puzzles["blue-4"].grading.teams.filter(a => a.status === "complete").length === 2);
@@ -308,6 +316,34 @@ test("queued submissions show the concise status in feedback and history", async
   const history = await page.locator(".grading-part").first().locator(".submission-history").textContent();
   assert.ok(history.includes("Queued..."));
   assert.ok(!history.includes("Queued for grading"));
+});
+
+for (const [status, label] of [["compiling", "Compiling…"], ["scoring", "Finishing..."], ["failed", "Processing failed."]]) {
+  test(`${status} uses neutral server wording without exposing detailed output`, async t => {
+    const { page } = await fixture(t, {
+      onPoll({ jobId, reply }) {
+        return reply({ jobId, status, message: "Private grading engine details", compileOutput: "Private compiler output" });
+      },
+    });
+    await login(page);
+    await upload(page, "teams");
+    await page.waitForFunction(label => document.querySelector(".upload-feedback").textContent === label, label);
+    assert.ok((await page.locator(".submission-history").first().textContent()).includes(label));
+    assert.doesNotMatch(await page.locator("#grading-puzzle").textContent(), /\bgrading\b|\bgrader\b|Private/i);
+    assert.equal(await page.locator(".submission-history details, .submission-detail").count(), 0);
+    assert.equal(await page.locator(".grading-access").getAttribute("aria-label"), "Server access");
+  });
+}
+
+test("a busy server uses neutral wording and keeps the submission retryable", async t => {
+  const { page, uploads } = await fixture(t, {
+    onPoll: ({ reply }) => reply({}, 429),
+  });
+  await login(page);
+  await upload(page, "teams");
+  await page.waitForSelector(".check-status:not([hidden])");
+  assert.equal(await page.locator(".upload-feedback").first().textContent(), "The server is busy. Please wait before trying again.");
+  assert.equal(uploads.length, 1);
 });
 
 test("repeated submit actions create one upload while grading is pending", async t => {
@@ -360,7 +396,7 @@ test("GREEN can solve while grading is still running, without cancelling the upl
   assert.equal(progress.puzzles["blue-4"].grading.teams.at(-1).score, 100);
 });
 
-test("poll failures pause and resume without duplicating uploads; output is rendered as text", async (t) => {
+test("poll failures pause and resume without duplicating uploads; detailed output stays hidden", async (t) => {
   let failed = false;
   const { page, uploads } = await fixture(t, {
     onPoll({ jobId, reply }) {
@@ -371,11 +407,14 @@ test("poll failures pause and resume without duplicating uploads; output is rend
   await login(page);
   await upload(page, "teams", "<img src=x>.cpp");
   await page.waitForSelector(".check-status:not([hidden])");
+  assert.equal(await page.locator(".upload-feedback").first().textContent(), "The server could not complete the request (503).");
   assert.equal(uploads.length, 1);
   await page.locator(".grading-part").first().locator(".check-status").click();
   await page.waitForFunction(() => document.querySelector(".submission-history").textContent.includes("Compilation failed"));
   assert.equal(uploads.length, 1);
   assert.equal(await page.locator(".submission-history img").count(), 0);
+  assert.equal(await page.locator(".submission-history details, .submission-detail").count(), 0);
+  assert.doesNotMatch(await page.locator(".submission-history").first().textContent(), /compiler message/);
   assert.equal(await page.evaluate(() => window.injected), undefined);
   assert.equal(await page.locator("#teams-file").isEnabled(), true);
   assert.equal(await page.locator("#puzzle-answer").isEnabled(), true);
@@ -392,6 +431,7 @@ test("pending job survives navigation and reload, then resumes after expired ses
   await login(page);
   await upload(page, "teams");
   await page.waitForSelector(".grading-login-form:not([hidden])");
+  assert.equal(await page.locator(".grading-connection").textContent(), "Your server session expired or was rejected. Connect again to continue.");
   assert.equal(await page.evaluate((key) => sessionStorage.getItem(key), SESSION_KEY), null);
   await page.locator("#back-button").click();
   await page.waitForSelector("#puzzle-list");
