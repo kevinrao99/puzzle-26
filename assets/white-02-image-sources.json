@@ -1,0 +1,92 @@
+[
+  {
+    "file": "assets/white-02-artwork-01.jpg",
+    "title": "Fish Market",
+    "objectUrl": "https://www.metmuseum.org/art/collection/search/679844",
+    "sourceUrl": "https://collectionapi.metmuseum.org/api/collection/v1/iiif/679844/1571243/main-image",
+    "sha256": "8725f32c97c85ffe9e098dc7267b1d5a7e43155d031d7958cc365049f170c956",
+    "width": 1200,
+    "height": 891
+  },
+  {
+    "file": "assets/white-02-artwork-02.jpg",
+    "title": "Susanna and the Elders",
+    "objectUrl": "https://www.metmuseum.org/art/collection/search/368314",
+    "sourceUrl": "https://images.metmuseum.org/CRDImages/dp/web-large/DP811082.jpg",
+    "sha256": "26b84d7bf1668da56bf6d3be2bc92b5a8ce616faf3c346647e1be51a4244e26f",
+    "width": 436,
+    "height": 625
+  },
+  {
+    "file": "assets/white-02-artwork-03.jpg",
+    "title": "La Belle Jardinière",
+    "objectUrl": "https://collections.louvre.fr/ark:/53355/cl010060754",
+    "sourceUrl": "https://collections.louvre.fr/media/cache/medium/0000000021/0000060754/0000978445_OG.JPG",
+    "sha256": "3cb1bcf1b87eeefae9eb3ef25da59b8376a7ef202f664b01d13a2272832c18d0",
+    "width": 493,
+    "height": 750
+  },
+  {
+    "file": "assets/white-02-artwork-04.jpg",
+    "title": "Bacchanal: A Faun Teased by Children",
+    "objectUrl": "https://www.metmuseum.org/art/collection/search/238974",
+    "sourceUrl": "https://collectionapi.metmuseum.org/api/collection/v1/iiif/238974/486343/main-image",
+    "sha256": "909b0281bed91ea312621a99caf8c3f8ffac3e921dfbb724c759e0edb1d57d03",
+    "width": 923,
+    "height": 1200
+  },
+  {
+    "file": "assets/white-02-artwork-05.jpg",
+    "title": "The Mystic Marriage of Saint Catherine",
+    "objectUrl": "https://www.nga.gov/artworks/75785-mystic-marriage-saint-catherine",
+    "sourceUrl": "https://api.nga.gov/iiif/5fadc48f-1f58-4d2d-85b7-ad74899050cd/full/%21800%2C800/0/default.jpg",
+    "sha256": "98c0a29a759b64ddf6ff407247826c5a16d04b91857ce89ecd482f4dd4bf5e30",
+    "width": 800,
+    "height": 520
+  },
+  {
+    "file": "assets/white-02-artwork-06.jpg",
+    "title": "Apollo and Daphne",
+    "objectUrl": "https://collections.louvre.fr/en/ark:/53355/cl010059432",
+    "sourceUrl": "https://collections.louvre.fr/media/cache/medium/0000000021/0000059432/0000135396_OG.JPG",
+    "sha256": "f9b528362163e6e4b1477f5148f24e6b6cd1fc69d266e5d5996dc23d061a2fc3",
+    "width": 619,
+    "height": 750
+  },
+  {
+    "file": "assets/white-02-artwork-07.jpg",
+    "title": "A Dance in the Country",
+    "objectUrl": "https://www.metmuseum.org/art/collection/search/437812",
+    "sourceUrl": "https://collectionapi.metmuseum.org/api/collection/v1/iiif/437812/796639/main-image",
+    "sha256": "49ecaf507f680d20d16fa65e0cce74e622500fbb3c6393e645b71e9707fba0a9",
+    "width": 1200,
+    "height": 757
+  },
+  {
+    "file": "assets/white-02-artwork-08.jpg",
+    "title": "Saint Jerome and the Angel",
+    "objectUrl": "https://www.nga.gov/artworks/46151-saint-jerome-and-angel",
+    "sourceUrl": "https://api.nga.gov/iiif/8cb10467-fce1-444c-8412-168ec845b730/full/%21800%2C800/0/default.jpg",
+    "sha256": "4a0ed14460b505a59d514806eb349e2cbd5967acd597829c62982a2297de1d31",
+    "width": 800,
+    "height": 636
+  },
+  {
+    "file": "assets/white-02-artwork-09.jpg",
+    "title": "The Resurrected Christ",
+    "objectUrl": "https://collections.louvre.fr/en/ark:/53355/cl010094362",
+    "sourceUrl": "https://collections.louvre.fr/media/cache/medium/0000000021/0000094362/0001262491_OG.JPG",
+    "sha256": "c9cfea19f8d821c411e6c1205f7113056339aa1061c6c383fcbfb6524f505d4f",
+    "width": 532,
+    "height": 750
+  },
+  {
+    "file": "assets/white-02-artwork-10.jpg",
+    "title": "Venus and Cupid",
+    "objectUrl": "https://www.metmuseum.org/art/collection/search/436918",
+    "sourceUrl": "https://collectionapi.metmuseum.org/api/collection/v1/iiif/436918/2169880/main-image",
+    "sha256": "746f7252f52749e878866764f3c5d5bd2012bef34cea57e75637c413b4e3cda1",
+    "width": 1200,
+    "height": 1004
+  }
+]

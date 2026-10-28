@@ -1,0 +1,51 @@
+[
+  {
+    "file": "assets/white-01-portrait-01.jpg",
+    "sourceUrl": "https://images.openai.com/static-rsc-4/1hHsuLv1WRCc6medpg8VE9stRUsFaauFJG60VrAyTTeiEn00la2EYFhYmuPShGCFVqA9tTAYJgKXiRlyqaXptjsesJf1QkzRpyhZ3sz8g0UL1AjB5Zg0D_-ORPhbSfkSxt-9jsFwlPs9TIFpbFTgVhY0OoZ_GJknMXI9cJyOud4?purpose=inline",
+    "sha256": "72537dc61be72d40f590b8abe54eaf33791badb7107c82ec7143dae6490d7f50",
+    "width": 1024,
+    "height": 1204
+  },
+  {
+    "file": "assets/white-01-portrait-02.jpg",
+    "sourceUrl": "https://images.openai.com/static-rsc-4/9cv5Q6iN4N8qXWsg8SpzquXcTypdVxDIeXEJPH6WvEXidw7yw9cDAeyIRxxlAo4JabtC0MSpqiAJL3iSwmDxPmfqrXNXEOROQmbYwY9VpWhDCxSu1d_CACuDEWK8sc35RFlCWApMD3q1dgj3yR-tuH5wW1vHvrvsTgJdh6e-DaI?purpose=inline",
+    "sha256": "d3dd6a03a00aa4d93d896c573460e7ff1f3d7dbc95e4431970cda4440c5faa02",
+    "width": 960,
+    "height": 1795
+  },
+  {
+    "file": "assets/white-01-portrait-03.jpg",
+    "sourceUrl": "https://images.openai.com/static-rsc-4/Jd6pO9Q1IgP41ygjYwP7z9V4t1goARvcfvmOjjd_gSKMAOr3KD22EDJoM2PN1XYXszecc7lca8MDKpXndxVb8q5NbmiHV6mDW8XN8RNpnenFyItYAiGsWT3noyk-ZszVkHfZUfcVS3Vm745Y6gaf4viP1kY2GBOK2_esOdy6wmU?purpose=inline",
+    "sha256": "4fe6c8cac10ec7d9fee36650f16cbe9b1ed8f33004fe1b1f11a836eb7441e766",
+    "width": 700,
+    "height": 505
+  },
+  {
+    "file": "assets/white-01-portrait-04.jpg",
+    "sourceUrl": "https://images.openai.com/static-rsc-4/vN2SuZMM9BDItwdrG0cXH6yHdRJlVFJyJsLHoaRPiwJjiZPHXABbpIeITk43K_QKDTYJUkMB6d0Q9vw8yIwvj_X19SU83fkR1lVkRI9oBnFuBYkBzNTTIiObO2Tx8Ht5mybvNRPr5SXc3vIwEbhhNuesVZH27PO3H0ZCKzBVbwo?purpose=inline",
+    "sha256": "0fae8b92899dd394aabd776c68b24811ba4df0a50cd578a622f3719682d3b15f",
+    "width": 1024,
+    "height": 1365
+  },
+  {
+    "file": "assets/white-01-portrait-05.jpg",
+    "sourceUrl": "https://images.openai.com/static-rsc-4/x7jhTJAAPLTqdbRH6QN4E3dg2vD3sDLoLHTtmzIUAVgk9GClJNnqCBkTkO0otGFl3iQyG53-gBFj0RZKaiuyZIQ94S-QHFJsdDsX3kNIGiAH2tK3RnsHSgGN7yBevX9MLqx540_nQ5h5feDZxt2l1vCZTT52OhImc71-v0hFwSQ?purpose=inline",
+    "sha256": "c16a37cbf1ddacad4e545d27cadd3845feabe23095de24c622ca43e737f75f00",
+    "width": 1024,
+    "height": 1198
+  },
+  {
+    "file": "assets/white-01-portrait-06.jpg",
+    "sourceUrl": "https://images.openai.com/static-rsc-4/CnSQ2DFeWCtZKJ5BmyyxKyJkXr6jZjexm6JS_0NTrdmICD2O0SHIc7TNfz9hjglXWE6Lt_T2uImjn0upJOZU6nIstsPV4GnHYYNYglcJmHBC69S2NpPINemtGXzsvbfh9hhu0sq0Qp7jNsBCPsxHFhTq3ZyrEFApV0Yhu35yNgs?purpose=inline",
+    "sha256": "fefa6f8f44b779c71f529d3f7582c8e51dabcc42be6dbe75fff38320b29b5f1d",
+    "width": 763,
+    "height": 1000
+  },
+  {
+    "file": "assets/white-01-portrait-07.jpg",
+    "sourceUrl": "https://images.openai.com/static-rsc-4/Alc3xJ0NFjFD17n7ZxJvEmJi_nr8qcoYVKDqLTFXvIn2O7ferJ7oSHui74NYkBAiAnZ3wNVQuJOZDkacBIRNfj2ylAogPypF5td8jEhan1pLw26UJQ3cEKs-sDBLZA7SmxFESfsnK3IF-CCoz6QzRHPVWIOX8PD9WM7IUuINuAw?purpose=inline",
+    "sha256": "937b2a3a35024a70cb2ab6a50539bf5741f8552acc70120f914878306fa4efa2",
+    "width": 420,
+    "height": 440
+  }
+]

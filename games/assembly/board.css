@@ -1,0 +1,14 @@
+.app-shell:has(.assembly-board){width:min(1480px,calc(100% - 32px))}
+.assembly-board{margin:30px 0;background:#fff;border:1px solid var(--line,#d8d1c4);border-radius:10px;overflow:hidden;color:#20252b;font:14px/1.45 system-ui,sans-serif}
+.assembly-stage:focus-visible,.assembly-piece:focus-visible{outline:2px solid #337962;outline-offset:2px}
+.assembly-stage{display:block;width:100%;height:clamp(520px,76vh,900px);background:white;touch-action:none;user-select:none;cursor:grab;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+.assembly-piece{cursor:grab;outline:none!important}
+.assembly-piece:active,.assembly-stage:active{cursor:grabbing}
+.assembly-geometry{pointer-events:visiblePainted}
+.assembly-hits>*{pointer-events:stroke}
+.assembly-label text{pointer-events:visiblePainted}
+.assembly-rotate-hit{cursor:crosshair}
+.assembly-expanded{position:fixed;inset:12px;z-index:1000;margin:0;display:flex;flex-direction:column;box-shadow:0 0 0 20px rgba(15,25,18,.3)}
+.assembly-expanded .assembly-stage{height:auto;min-height:100px;flex:1}
+.assembly-save-error{margin:0;padding:8px 14px;color:#8a302c;font-size:12px}
+@media(max-width:600px){.assembly-stage{height:65vh;min-height:430px}.assembly-expanded{inset:0;border-radius:0}.assembly-board{margin-top:20px}}

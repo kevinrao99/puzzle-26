@@ -1,0 +1,29 @@
+Phyrexian category inscriptions - asset provenance
+
+Font file: Phyrexian-Regular.ttf (unmodified)
+Copied from the existing local phyrexian-reference/script-demo.
+Original download:
+https://raw.githubusercontent.com/fxbuson/PhyrexianDictionary/f3ea2bd41c433976493862325d91435dc3522cc3/fonts/Phyrexian-Regular.ttf
+
+Embedded font metadata:
+Family: Phyrexian
+Style: Regular
+Version: 1.000
+Manufacturer: Delve Fonts LLC
+Designer: Wizards of the Coast
+Copyright: Copyright © 2019 by Wizards of the Coast, a Hasbro Subsidiary. All rights reserved.
+Description: Phyrexian is Copyright © 2019 by Wizards of the Coast, a Hasbro Subsidiary. All rights reserved.
+Vendor URL: http://www.delvefonts.com
+
+This copy comes from a community repository. Its metadata is not proof of an
+official public font release or permission to redistribute/embed it. The font
+contains no separate license description or license URL. Do not assume that
+the repository's GPLv3 license replaces the font's embedded rights notice.
+
+Rendering preserves the original font outlines. Black fill, a white outline,
+and the optional subpixel roughness follow the user's existing HTML demo.
+The hyphen character (-) is the connected squiggle word separator; ^ and .
+are the opening and closing marks. No ordinary spaces interrupt the spine.
+
+Word forms are drawn from the user's saved vocabulary inventory. These are
+assembled glossary phrases, not claims of attested official sentences.

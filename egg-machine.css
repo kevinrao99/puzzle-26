@@ -1,0 +1,155 @@
+.egg-machine {
+  width: 100%;
+  /* Keep the interactive dragon within a typical desktop viewport. */
+  max-width: min(680px, max(300px, calc(75svh - 130px)));
+  overflow: hidden;
+  border: 1px solid #ad8d4e;
+  border-radius: 23px;
+  background: #352515;
+  box-shadow: 0 18px 55px #4b351a24;
+}
+
+.egg-machine-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 22px 20px;
+  border-bottom: 1px solid #efd18680;
+  background: linear-gradient(120deg, #3e2b19, #634829 50%, #3e2b19);
+  color: #fae6ad;
+  box-shadow: 0 3px 0 #372717;
+}
+
+.egg-machine-header h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 4vw, 2.15rem);
+  letter-spacing: -.02em;
+}
+
+.egg-machine-ornament {
+  color: #b89757;
+  font-size: 1.1rem;
+}
+
+.egg-machine-stage {
+  position: relative;
+  overflow: hidden;
+  background: #d1af3b;
+}
+
+.egg-machine-reveal {
+  position: absolute;
+  inset: 0;
+}
+
+.egg-machine-reveal[hidden] { display: none; }
+
+.egg-reveal-scene { display: block; width: 100%; height: 100%; }
+
+.rem-reveal-glow { transform-origin: 0 0; }
+
+.egg-reveal-card {
+  position: absolute;
+  width: min(68%, 300px);
+  left: 50%;
+  top: 48%;
+  translate: -50% -50%;
+  opacity: 0;
+}
+
+.egg-reveal-card .hunt-card {
+  max-width: none;
+  box-shadow: 0 14px 45px #0009, 0 0 40px #e5cf8533;
+}
+
+.egg-machine-feedback {
+  margin: 0;
+  padding: 18px 24px;
+  text-align: center;
+  color: #fff;
+  font-size: .95rem;
+  line-height: 1.5;
+}
+
+.egg-machine-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rem-arm-motion,
+.rem-head-motion,
+.rem-body-motion,
+.rem-wing-motion,
+.rem-door-motion,
+.rem-egg-flight {
+  transform-origin: 0 0;
+}
+
+.rem-background-star {
+  color: #d8fff1;
+  opacity: .5;
+  animation: rem-twinkle 3.8s ease-in-out infinite;
+  animation-delay: var(--star-delay);
+}
+
+.rem-background-star:nth-child(3n) {
+  color: #fffce1;
+}
+
+.rem-background-star:nth-child(3n + 1) {
+  color: #b1eff9;
+}
+
+@keyframes rem-twinkle {
+  0%, 100% { opacity: .15; }
+  50% { opacity: .8; }
+}
+
+.egg-machine-pull {
+  /* A transparent hit shape follows the actual arm, not the whole image. */
+  pointer-events: all;
+  cursor: pointer;
+  touch-action: manipulation;
+  outline: none;
+}
+
+.egg-machine-pull:hover[aria-disabled="false"] {
+  stroke: #fff3ac;
+  stroke-width: 5px;
+}
+
+.egg-machine-pull:focus-visible[aria-disabled="false"] {
+  stroke: #fff;
+  stroke-width: 8px;
+  filter: drop-shadow(0 0 5px #402c00);
+}
+
+.egg-machine-pull[aria-disabled="true"] {
+  cursor: wait;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The site's global reduced-motion rule sets a tiny transition duration.
+     SVG final-state changes should be immediate, with no implicit transition. */
+  .egg-machine-scene,
+  .egg-machine-scene *,
+  .egg-machine-reveal,
+  .egg-machine-reveal * { transition-property: none; }
+  .rem-background-star { animation: none; opacity: .45; }
+  .egg-machine-pull { transition: none; }
+}

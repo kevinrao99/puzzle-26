@@ -1,0 +1,1295 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap");
+
+/* Local, unmodified demo font; provenance is in assets/PHYREXIAN-NOTICE.txt. */
+@font-face {
+  font-family: "Phyrexian Script";
+  src: url("assets/Phyrexian-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  color-scheme: light;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --ink: #241c12;
+  --muted: #574326;
+  --paper: #b38a50;
+  --card: #e8d4a6;
+  --field: #f3e6c5;
+  --line: #947443;
+  --focus: #164e59;
+  --success: #36571f;
+  --error: #912b1f;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--paper);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 50% 15%, #ebc58140, transparent 65%),
+    radial-gradient(ellipse at 50% 100%, #61502d40, transparent 75%),
+    var(--paper);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  border: 8px solid #27291b;
+  box-shadow: inset 0 0 0 2px #8c753e;
+  pointer-events: none;
+}
+
+body:has(.home-page, .category-page, .puzzle-page, .identity-page) {
+  background: #402d13;
+}
+
+.puzzle-page > .page-header {
+  --muted: var(--field);
+  color: var(--field);
+}
+
+.puzzle-page .puzzle-image-gallery figcaption,
+.puzzle-page .card-template-header,
+.puzzle-page .card-preview-number,
+.puzzle-page .card-collection-empty,
+.puzzle-page > #reaction-assembly {
+  color: var(--field);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--focus) 70%, transparent);
+  outline-offset: 3px;
+}
+
+.app-shell {
+  width: min(960px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 88px 0 64px;
+}
+
+.page {
+  animation: page-in 180ms ease-out;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 760px;
+  margin-bottom: 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.6rem, 8vw, 5.8rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+}
+
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.lede {
+  max-width: 610px;
+  margin-bottom: 36px;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.panel {
+  max-width: 680px;
+  padding: clamp(24px, 5vw, 44px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  box-shadow: 0 18px 60px rgba(40, 32, 20, 0.08);
+}
+
+.identity-page {
+  display: grid;
+  min-height: calc(100vh - 152px);
+  place-items: center;
+}
+
+.identity-page .panel {
+  --muted: var(--field);
+  --error: #ffe3cf;
+  width: min(100%, 620px);
+  background: #8b5523;
+  color: var(--field);
+}
+
+.identity-page :is(button, input):focus-visible {
+  outline-color: var(--field);
+}
+
+.identity-page .answer-row {
+  grid-template-columns: minmax(0, 1fr) 52px;
+}
+
+.identity-page .identity-submit {
+  width: 52px;
+  min-height: 52px;
+  padding: 0;
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.answer-form {
+  display: grid;
+  gap: 14px;
+}
+
+.answer-form label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.answer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.answer-input {
+  min-width: 0;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.answer-input::placeholder {
+  color: #76613f;
+  font-weight: 400;
+}
+
+.primary-button,
+.back-button,
+.danger-button {
+  min-height: 50px;
+  border-radius: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.primary-button {
+  padding: 0 22px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--field);
+  cursor: pointer;
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.feedback {
+  min-height: 1.5em;
+  margin: 2px 0 0;
+  font-weight: 700;
+}
+
+.feedback[data-type="success"] {
+  color: var(--success);
+}
+
+.feedback[data-type="error"] {
+  color: var(--error);
+}
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  margin-bottom: 30px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--card) 84%, transparent);
+  cursor: pointer;
+}
+
+.back-button::before {
+  content: "←";
+  font-size: 1.1rem;
+}
+
+.app-shell:has(.home-page) {
+  padding: 72px 0 40px;
+}
+
+.home-page {
+  display: grid;
+  min-height: calc(100svh - 112px);
+  place-items: center;
+}
+
+.category-grid {
+  position: relative;
+  width: min(calc(100% - 32px), 540px, calc((100svh - 140px) * 0.78));
+  aspect-ratio: 0.78;
+  border: 2px solid #737d89;
+  border-radius: 50%;
+  background: #8b5523;
+  box-shadow:
+    0 0 0 2px #30291b,
+    0 0 0 10px #696037,
+    0 0 0 12px #25281a,
+    0 22px 60px #17190e80;
+}
+
+.category-button {
+  position: absolute;
+  left: var(--pip-x);
+  top: var(--pip-y);
+  width: 16%;
+  min-width: 44px;
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 2px solid #322a1b;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 25%, #fff9ce85, transparent 56%),
+    var(--category-color);
+  box-shadow:
+    inset 0 2px 3px #fff6cf66,
+    inset 0 -5px 9px #16180980,
+    0 3px 5px #251b1480;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.category-button[data-category="white"] { --pip-x: 50%; --pip-y: 29.6%; }
+.category-button[data-category="blue"] { --pip-x: 78.532%; --pip-y: 45.769%; }
+.category-button[data-category="black"] { --pip-x: 67.634%; --pip-y: 71.931%; }
+.category-button[data-category="red"] { --pip-x: 32.366%; --pip-y: 71.931%; }
+.category-button[data-category="green"] { --pip-x: 21.468%; --pip-y: 45.769%; }
+
+.category-button:hover:not(:disabled) {
+  transform: translate(-50%, -50%) scale(1.07);
+}
+
+.category-button:focus-visible,
+.phyrexian-symbol-button:focus-visible {
+  outline: 3px solid #fff0b8;
+  outline-offset: 6px;
+}
+
+.phyrexian-symbol-button {
+  position: absolute;
+  left: 50%;
+  top: 53%; /* Center of the five color circles. */
+  display: grid;
+  place-items: center;
+  width: 22%;
+  min-width: 44px;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.phyrexian-symbol-button img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: brightness(0) invert(1) drop-shadow(0 0 4px #ffffffa6) drop-shadow(0 0 12px #ffffff80);
+  animation: phyrexian-glow 3s ease-in-out infinite;
+}
+
+@keyframes phyrexian-glow {
+  0%, 100% {
+    opacity: 0.78;
+    transform: scale(0.97);
+    filter: brightness(0) invert(1) drop-shadow(0 0 3px #ffffff99) drop-shadow(0 0 8px #ffffff66);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+    filter: brightness(0) invert(1) drop-shadow(0 0 7px #ffffffdd) drop-shadow(0 0 20px #ffffffaa);
+  }
+}
+
+.puzzle-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(38, 31, 24, 0.14);
+}
+
+.category-button:disabled,
+.phyrexian-symbol-button:disabled,
+.puzzle-button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
+.category-banner {
+  display: grid;
+  place-items: center;
+  container-type: inline-size;
+  width: 100%;
+  min-height: clamp(76px, 14vw, 112px);
+  padding: 12px 24px;
+  margin-bottom: 24px;
+  border: 1px solid color-mix(in srgb, var(--category-color) 75%, #000);
+  border-radius: 999px;
+  background: var(--category-color);
+}
+
+.category-banner--metallic {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgb(255 255 255 / 0.07) 0 1px,
+      rgb(35 42 58 / 0.04) 1px 2px
+    ),
+    linear-gradient(
+      110deg,
+      #747a87 0%,
+      var(--category-color) 18%,
+      #e2e5ec 31%,
+      var(--category-color) 44%,
+      #878d9a 58%,
+      #cdd1db 73%,
+      var(--category-color) 88%,
+      #747a87 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgb(244 246 251 / 0.8),
+    inset 0 -2px 4px rgb(50 57 72 / 0.45),
+    0 4px 12px rgb(0 0 0 / 0.18);
+}
+
+.phyrexian-filter-definitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.phyrexian {
+  font-family: "Phyrexian Script", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-synthesis: none;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.6;
+  white-space: nowrap;
+  color: #000;
+  -webkit-text-stroke: 0.04em #fff;
+  paint-order: stroke fill;
+}
+
+.phyrexian-text {
+  visibility: hidden;
+  filter: url("#phyrexian-rough-edge");
+}
+
+.script-ready > .phyrexian-text {
+  visibility: visible;
+}
+
+.category-inscription {
+  font-size: clamp(16px, 6cqi, 48px);
+}
+
+.category-banner--sentence .category-inscription {
+  max-width: 100%;
+  font-size: clamp(18px, 3cqi, 28px);
+  white-space: normal;
+  text-align: center;
+}
+
+.puzzle-list {
+  display: grid;
+  gap: 12px;
+}
+
+.puzzle-button {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  width: 100%;
+  min-height: 82px;
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.puzzle-rarity-symbol {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.puzzle-name {
+  font-weight: 900;
+  letter-spacing: 0.09em;
+}
+
+.puzzle-name--phyrexian,
+.phyrexian-puzzle-heading {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.puzzle-name-inscription,
+.puzzle-title-inscription {
+  display: block;
+  white-space: normal;
+}
+
+.puzzle-name-inscription {
+  font-size: clamp(15px, 7.5cqi, 28px);
+}
+
+.puzzle-title-inscription {
+  font-size: clamp(20px, 5cqi, 40px);
+}
+
+.puzzle-status {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.puzzle-status.solved {
+  color: var(--success);
+  font-family: var(--font-mono);
+}
+
+.puzzle-status--check {
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.puzzle-content {
+  margin-bottom: 24px;
+}
+
+#phyrexian-encoding {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.encoding-example {
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(16px, 3vw, 28px);
+  text-align: center;
+}
+
+.encoding-phrase {
+  container-type: inline-size;
+  min-width: 0;
+  margin-bottom: 20px;
+}
+
+.encoding-inscription {
+  display: block;
+  font-size: clamp(16px, 6cqi, 36px);
+  white-space: normal;
+}
+
+.encoding-example--challenge {
+  margin-top: 12px;
+  border: 2px solid var(--line);
+}
+
+.encoding-matrix-scroll {
+  max-width: 100%;
+  padding: 4px 2px 12px;
+  overflow-x: auto;
+}
+
+.encoding-matrix-scroll:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.encoding-matrix-brackets {
+  display: inline-block;
+  padding: 5px 8px;
+  border-left: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
+  background: linear-gradient(var(--ink), var(--ink)) left top / 9px 2px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) left bottom / 9px 2px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right top / 9px 2px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right bottom / 9px 2px no-repeat;
+}
+
+.encoding-matrix {
+  border-collapse: collapse;
+  font: 14px / 1.8 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.encoding-matrix td {
+  min-width: 3.6ch;
+  padding: 2px 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#phyrexian-transformations {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.transformation-diagram,
+.transformation-input {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: clamp(16px, 2.5vw, 24px);
+}
+
+.transformation-flow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.transformation-node {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  container-type: inline-size;
+}
+
+.transformation-being { grid-area: 1 / 1 / 2 / 3; }
+.transformation-oil { grid-area: 3 / 1; }
+.transformation-blood { grid-area: 3 / 2; }
+.transformation-result { grid-area: 4 / 2; margin-top: 28px; }
+
+.transformation-branches {
+  grid-area: 2 / 1 / 3 / 3;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.transformation-branches path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.transformation-branches text {
+  fill: var(--ink);
+  text-anchor: middle;
+  font: 36px var(--font-mono);
+}
+
+.transformation-node-inscription,
+.transformation-result-inscription {
+  display: block;
+  font-size: clamp(16px, 16cqi, 36px);
+}
+
+.transformation-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  min-width: 0;
+}
+
+.transformation-input {
+  text-align: center;
+}
+
+.transformation-phrase {
+  margin-bottom: 24px;
+}
+
+.transformation-inscription {
+  display: block;
+  font-size: 36px;
+}
+
+@media (max-width: 960px) {
+  .transformation-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.puzzle-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#phyrexian-factions {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.faction-board {
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(16px, 2.5vw, 24px);
+}
+
+.faction-board svg {
+  display: block;
+  width: min(100%, 640px);
+  height: auto;
+  margin: auto;
+}
+
+.faction-board polygon {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2;
+}
+
+.faction-board .faction-inner {
+  stroke: #fff;
+}
+
+.faction-board circle {
+  fill: var(--card);
+  stroke: #000;
+  stroke-width: 2;
+}
+
+.puzzle-image-gallery {
+  display: grid;
+  gap: 24px;
+  width: min(100%, 680px);
+}
+
+.puzzle-image-gallery--grid {
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 32px 24px;
+}
+
+.puzzle-image-gallery--grid figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.puzzle-image-gallery--grid .puzzle-image {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+}
+
+.puzzle-image-gallery--grid figcaption {
+  margin-top: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.crossword-grid-scroll {
+  max-width: none;
+  padding: 0;
+  overflow-x: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+.crossword-grid-scroll:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.crossword-grid-scroll .puzzle-image {
+  width: 100%;
+  min-width: 960px;
+  max-width: none;
+}
+
+.crossword-clues {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  max-width: none;
+  margin-top: 24px;
+}
+
+.crossword-clues h2 {
+  margin-bottom: 16px;
+}
+
+.crossword-clues ol {
+  margin: 0;
+  padding-left: 2rem;
+}
+
+.crossword-clues li {
+  padding-left: 6px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.puzzle-hints {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.8;
+}
+
+.puzzle-hints li + li {
+  margin-top: 16px;
+}
+
+.puzzle-statement pre {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+.puzzle-statement--aligned {
+  max-width: 100%;
+}
+
+.cipher-text-box {
+  display: block;
+  width: 100%;
+  height: calc(3.6em + 50px);
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--field);
+  color: var(--ink);
+  overflow-x: auto;
+  overflow-y: hidden;
+  resize: none;
+  white-space: pre;
+  overflow-wrap: normal;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.8;
+  /* Apply the same advance to both rows, leaving a gap between underscores. */
+  letter-spacing: 0.15em;
+  font-variant-ligatures: none;
+  font-kerning: none;
+}
+
+.cipher-text-box:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.puzzle-subtitle {
+  margin: 0;
+  color: var(--field);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.microdot-word {
+  white-space: nowrap;
+}
+
+.microdot-letter {
+  display: inline-block;
+  position: relative;
+  color: transparent;
+  line-height: 1;
+}
+
+/* Keep the real i in selectable text, but draw a dotless stem beneath the image. */
+.microdot-letter::before {
+  content: "\0131";
+  position: absolute;
+  /* The dotless glyph is wider than i; center it on the dot's shared anchor. */
+  top: 0;
+  left: 50%;
+  width: max-content;
+  transform: translateX(-50%);
+  color: var(--field);
+}
+
+.microdot-image {
+  display: block;
+  position: absolute;
+  top: 0.135em;
+  left: 50%;
+  width: 0.125em;
+  height: 0.125em;
+  transform: translateX(-50%);
+  border-radius: 50%;
+}
+
+.rhythm-game-frame {
+  display: block;
+  width: min(100%, 528px);
+  height: 620px;
+  margin-bottom: 24px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #101312;
+}
+
+.nim-game-wrap {
+  position: relative;
+  box-sizing: content-box;
+  width: min(100%, 626px);
+  aspect-ratio: 1;
+  /* The controls and coordinate gutter add 64px to the square board layout. */
+  padding-bottom: 64px;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #101312;
+}
+
+.nim-game-frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.placeholder-puzzle {
+  display: grid;
+  min-height: 230px;
+  margin-bottom: 24px;
+  padding: 28px;
+  place-items: center;
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  color: var(--muted);
+  text-align: center;
+}
+
+.attempts-panel {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.attempt-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  list-style: none;
+}
+
+.attempt-list li {
+  line-height: 1.5;
+}
+
+.attempt-list .correct-attempt {
+  color: var(--success);
+}
+
+.attempt-list .correct-attempt-neutral {
+  color: var(--ink);
+}
+
+.puzzle-content--solved .attempts-panel {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.puzzle-content > .feedback {
+  margin-top: 14px;
+}
+
+.empty-attempts {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.grading-access,
+.grading-part {
+  margin-bottom: 24px;
+}
+
+.grading-connection,
+.grading-answer-notice {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.grading-login-form,
+.upload-form {
+  display: grid;
+  gap: 12px;
+}
+
+.grading-login-form label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.grading-code-input,
+.source-file {
+  width: 100%;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.source-file::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.secondary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-feedback,
+.upload-history {
+  overflow-wrap: anywhere;
+}
+
+.upload-history li + li {
+  margin-top: 12px;
+}
+
+.upload-history p {
+  margin: 0;
+}
+
+.submission-detail,
+.upload-history details {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.upload-history summary {
+  cursor: pointer;
+}
+
+.upload-history pre {
+  overflow: auto;
+  max-height: 240px;
+  padding: 12px;
+  background: var(--paper);
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.part-complete {
+  border-color: var(--success);
+}
+
+.answer-revealed {
+  color: var(--success);
+}
+
+.revealed-answer {
+  font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+.help-button {
+  position: fixed;
+  z-index: 20;
+  top: 22px;
+  right: 22px;
+  display: grid;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--card);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(38, 31, 24, 0.12);
+}
+
+@keyframes identity-help-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body:has(.identity-page) .help-button {
+    animation: identity-help-blink 1.6s ease-in-out infinite;
+  }
+}
+
+.help-dialog {
+  width: min(520px, calc(100% - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: var(--ink);
+}
+
+.help-dialog::backdrop {
+  background: rgba(22, 20, 17, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+.help-card {
+  position: relative;
+  padding: 34px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.26);
+}
+
+.help-card h2 {
+  margin-bottom: 14px;
+}
+
+.help-card > p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--field);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.testing-tools {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.testing-tools h3 {
+  margin-bottom: 8px;
+}
+
+.testing-tools p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.danger-button {
+  padding: 0 16px;
+  border: 1px solid #a34c32;
+  background: #edd2aa;
+  color: #832b1c;
+  cursor: pointer;
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    width: min(100% - 24px, 960px);
+    padding-top: 76px;
+  }
+
+  .answer-row {
+    grid-template-columns: 1fr;
+  }
+
+  .crossword-clues {
+    grid-template-columns: 1fr;
+  }
+
+  .primary-button {
+    width: 100%;
+  }
+
+  .help-button {
+    top: 14px;
+    right: 14px;
+  }
+
+  .puzzle-button {
+    grid-template-columns: auto 1fr;
+  }
+
+  .puzzle-status {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phyrexian-symbol-button img {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

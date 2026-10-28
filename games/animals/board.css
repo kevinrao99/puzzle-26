@@ -1,0 +1,34 @@
+.animal-matching { width: 100%; }
+.animal-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.animal-categories { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.animal-category { min-width: 0; padding: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; }
+.animal-matching[data-complete="true"] .animal-category { border-color: var(--success); }
+.animal-pair-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 8px; margin-top: 9px; padding: 6px; border: 1px solid var(--line); border-radius: 12px; }
+.animal-example { margin-top: 0; margin-bottom: 18px; background: color-mix(in srgb, var(--success) 7%, var(--card)); }
+.animal-matching[data-complete="true"] .animal-category[data-category="predation"] { background: var(--success); }
+.animal-matching[data-complete="true"] .animal-category[data-category="predation"] .animal-example { background: transparent; }
+.animal-fixed, .animal-slot { min-width: 0; aspect-ratio: 4 / 3; border-radius: 7px; }
+.animal-fixed { overflow: hidden; background: #edeae3; }
+.animal-fixed img, .animal-tile img, .animal-drag-ghost img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.animal-tile, .animal-empty { display: block; width: 100%; height: 100%; aspect-ratio: 4 / 3; min-width: 0; padding: 3px; border: 1px solid #bdb6a9; border-radius: 7px; background: #edeae3; }
+.animal-tile { cursor: grab; touch-action: none; user-select: none; }
+.animal-tile:active { cursor: grabbing; }
+.animal-tile:disabled { cursor: default; touch-action: auto; opacity: 1; }
+.animal-tile[aria-pressed="true"] { outline: 3px solid var(--success); outline-offset: 1px; }
+.animal-empty { border: 1px dashed #bbb3a5; background: transparent; cursor: pointer; }
+.animal-tray-section { margin-top: 22px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+.animal-return { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 8px; margin: 12px 0 0 auto; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); cursor: pointer; }
+.animal-return:disabled { color: var(--muted); opacity: .6; cursor: default; }
+.animal-tray { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.animal-drop-target { outline: 3px solid var(--success); outline-offset: 2px; }
+.animal-dragging { opacity: .3; }
+.animal-drag-ghost { position: fixed; left: 0; top: 0; width: 128px; height: 96px; z-index: 1000; pointer-events: none; background: var(--card); border: 2px solid var(--success); border-radius: 8px; padding: 3px; box-shadow: 0 8px 24px #0003; }
+@media (max-width: 700px) {
+  .animal-categories { grid-template-columns: 1fr; }
+  .animal-category { padding: 16px; }
+  .animal-pair-row { gap: 12px; }
+  .animal-tray { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 380px) {
+  .animal-tray { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

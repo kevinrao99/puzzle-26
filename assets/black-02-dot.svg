@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+  <title>ADFGVX grid and keyword BLACK</title>
+  <rect width="1000" height="1000" fill="#f3e6c5"/>
+  <g fill="#e8d4a6">
+    <rect x="150" y="140" width="700" height="100"/>
+    <rect x="150" y="240" width="100" height="600"/>
+  </g>
+  <path d="M150 140V840 M150 140H850 M250 140V840 M150 240H850 M350 140V840 M150 340H850 M450 140V840 M150 440H850 M550 140V840 M150 540H850 M650 140V840 M150 640H850 M750 140V840 M150 740H850 M850 140V840 M150 840H850" fill="none" stroke="#402d13" stroke-width="2"/>
+  <g fill="#402d13" font-family="Arial, Helvetica, sans-serif" font-size="42" text-anchor="middle" dominant-baseline="central">
+    <text x="200" y="172" font-size="20">Row ↓</text>
+    <text x="200" y="206" font-size="20">Column →</text>
+    <g id="column-labels">
+      <text x="300" y="190" font-weight="700">D</text>
+      <text x="400" y="190" font-weight="700">G</text>
+      <text x="500" y="190" font-weight="700">H</text>
+      <text x="600" y="190" font-weight="700">I</text>
+      <text x="700" y="190" font-weight="700">O</text>
+      <text x="800" y="190" font-weight="700">V</text>
+    </g>
+    <g id="row-A">
+      <text x="200" y="290" font-weight="700">A</text>
+      <text x="300" y="290">A</text>
+      <text x="400" y="290">B</text>
+      <text x="500" y="290">C</text>
+      <text x="600" y="290">D</text>
+      <text x="700" y="290">E</text>
+      <text x="800" y="290">H</text>
+    </g>
+    <g id="row-B">
+      <text x="200" y="390" font-weight="700">B</text>
+      <text x="300" y="390">G</text>
+      <text x="400" y="390">J</text>
+      <text x="500" y="390">K</text>
+      <text x="600" y="390">L</text>
+      <text x="700" y="390">M</text>
+      <text x="800" y="390">N</text>
+    </g>
+    <g id="row-C">
+      <text x="200" y="490" font-weight="700">C</text>
+      <text x="300" y="490">O</text>
+      <text x="400" y="490">I</text>
+      <text x="500" y="490">P</text>
+      <text x="600" y="490">Q</text>
+      <text x="700" y="490">R</text>
+      <text x="800" y="490">U</text>
+    </g>
+    <g id="row-E">
+      <text x="200" y="590" font-weight="700">E</text>
+      <text x="300" y="590">F</text>
+      <text x="400" y="590">V</text>
+      <text x="500" y="590">W</text>
+      <text x="600" y="590">X</text>
+      <text x="700" y="590">Y</text>
+      <text x="800" y="590">Z</text>
+    </g>
+    <g id="row-F">
+      <text x="200" y="690" font-weight="700">F</text>
+      <text x="300" y="690">S</text>
+      <text x="400" y="690">0</text>
+      <text x="500" y="690">1</text>
+      <text x="600" y="690">2</text>
+      <text x="700" y="690">3</text>
+      <text x="800" y="690">4</text>
+    </g>
+    <g id="row-X">
+      <text x="200" y="790" font-weight="700">X</text>
+      <text x="300" y="790">5</text>
+      <text x="400" y="790">6</text>
+      <text x="500" y="790">7</text>
+      <text x="600" y="790">8</text>
+      <text x="700" y="790">T</text>
+      <text x="800" y="790">9</text>
+    </g>
+    <text x="500" y="922" font-size="42">KEYWORD: BLACK</text>
+  </g>
+</svg>

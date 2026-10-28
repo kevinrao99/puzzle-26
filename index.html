@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A browser-based puzzle hunt with locally saved progress."
+    />
+    <title>Puzzle 26</title>
+    <link rel="icon" type="image/png" href="assets/donkey-common.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="egg-machine.css" />
+    <link rel="stylesheet" href="cards.css" />
+    <script src="grader-config.js" defer></script>
+    <script src="grading.js" defer></script>
+    <script src="egg-machine.js" defer></script>
+    <script src="cards-data.js" defer></script>
+    <script src="cards.js" defer></script>
+    <script src="phyrexian-encoding.js" defer></script>
+    <script src="phyrexian-transformations.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <svg class="phyrexian-filter-definitions" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="phyrexian-rough-edge" x="-4%" y="-20%" width="108%" height="140%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.065 0.32" numOctaves="2" seed="13" result="grain" />
+          <feDisplacementMap in="SourceGraphic" in2="grain" scale="0.7" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+    <main id="app" class="app-shell" aria-live="polite"></main>
+
+    <button
+      id="help-button"
+      class="help-button"
+      type="button"
+      aria-label="Open instructions"
+      aria-haspopup="dialog"
+    >
+      ?
+    </button>
+
+    <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
+      <section class="help-card">
+        <button
+          id="help-close"
+          class="modal-close"
+          type="button"
+          aria-label="Close instructions"
+        >
+          ×
+        </button>
+        <p class="eyebrow">HELP</p>
+        <h2 id="help-title">Guidelines</h2>
+        <p>
+          You do not need to inspect page source, and in fact will probably find something you’re not supposed to if you do.
+        </p>
+        <p>
+          Do not use gen ai, including Google AI Overview. Puzzles were not verified to be frontier-model-hard. They were also not verified to be Gemini/Opus/Muse/Grok-hard
+        </p>
+
+        <div class="testing-tools">
+          <button id="clear-state" class="danger-button" type="button">
+            Clear local progress
+          </button>
+        </div>
+      </section>
+    </dialog>
+  </body>
+</html>

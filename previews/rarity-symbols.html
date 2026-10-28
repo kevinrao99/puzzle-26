@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rarity symbols · Puzzle 26</title>
+    <link rel="stylesheet" href="../cards.css" />
+    <script src="../cards.js" defer></script>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 40px; background: #edf0f0; color: #000; font-family: system-ui, sans-serif; }
+      main { max-width: 1080px; margin: auto; }
+      .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .18em; }
+      h1 { margin: 12px 0; font: 500 36px Georgia, serif; }
+      .lede { line-height: 1.6; margin-bottom: 30px; }
+      .symbols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+      figure { margin: 0; min-width: 0; padding: 24px 12px; border: 1px solid #a9b9bc; border-radius: 12px; background: #f9faf8; text-align: center; }
+      figcaption { font: 600 18px Georgia, serif; margin-bottom: 26px; }
+      .symbol-large { display: block; width: 92px; height: 92px; margin: 0 auto 26px; }
+      .small-label { font-size: 10px; letter-spacing: .13em; margin-bottom: 12px; }
+      .actual-size { display: flex; justify-content: center; gap: 24px; }
+      .symbol-small { width: 36px; height: 36px; }
+      .note { font-size: 13px; line-height: 1.6; margin-top: 24px; }
+      a { color: inherit; }
+      @media (max-width: 800px) { .symbols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 440px) { body { padding: 24px 16px; } figcaption { font-size: 16px; } h1 { font-size: 30px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">CARD TEMPLATE · RARITY EMBLEMS</p>
+      <h1>Four geometric seals</h1>
+      <p class="lede">Layered silhouettes, with the nested diamond back in the set.</p>
+      <div class="symbols"></div>
+      <p class="note">Rarity symbols stay black on every card. Small examples show them at card size.<br />
+        <a href="first-five-cards.html">See them on the first five cards →</a></p>
+    </main>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const symbols = [["circle", "Ringed seal"], ["triangle", "Layered spire"], ["diamond", "Nested diamond"], ["star", "Starburst crest"]];
+        function symbol(rarity, size, name) {
+          // Clone the actual renderer output, keeping this preview in sync.
+          const card = window.HuntCards.createCard({ rarity });
+          const mark = card.querySelector('[data-field="rarity"]').cloneNode(true);
+          mark.removeAttribute("transform");
+          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute("viewBox", "-18 -18 36 36");
+          svg.setAttribute("class", `symbol-${size}`);
+          svg.setAttribute("role", "img");
+          svg.setAttribute("aria-label", name);
+          svg.append(mark);
+          return svg;
+        }
+        for (const [rarity, name] of symbols) {
+          const figure = document.createElement("figure");
+          const label = document.createElement("figcaption");
+          label.textContent = name;
+          const smallLabel = document.createElement("p");
+          smallLabel.className = "small-label";
+          smallLabel.textContent = "AT CARD SIZE";
+          const small = document.createElement("div");
+          small.className = "actual-size";
+          small.append(symbol(rarity, "small", name));
+          figure.append(label, symbol(rarity, "large", name), smallLabel, small);
+          document.querySelector(".symbols").append(figure);
+        }
+      });
+    </script>
+  </body>
+</html>

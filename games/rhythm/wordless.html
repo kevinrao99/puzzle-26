@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Rhythm · Word-free preview</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="wordless.css">
+  <script defer src="chart.js"></script>
+  <script defer src="engine.js"></script>
+  <script defer src="game.js"></script>
+</head>
+<body class="wordless" data-presentation="wordless">
+  <main aria-label="Rhythm game preview">
+    <section class="play-column" aria-label="Arrow-key rhythm game">
+      <div class="playback-bar">
+        <div class="actions">
+          <button id="start" class="primary" aria-label="Start from the beginning" disabled>▶</button>
+          <button id="stop" aria-label="Stop" disabled>■</button>
+        </div>
+        <div id="mistakes" class="mistake-indicators" data-count="0" role="img" aria-label="0 of 4 mistakes. The fourth mistake ends the run.">
+          <svg class="mistake-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2 12 9 19 2 22 5 15 12 22 19 19 22 12 15 5 22 2 19 9 12 2 5Z"/></svg>
+          <svg class="mistake-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2 12 9 19 2 22 5 15 12 22 19 19 22 12 15 5 22 2 19 9 12 2 5Z"/></svg>
+          <svg class="mistake-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2 12 9 19 2 22 5 15 12 22 19 19 22 12 15 5 22 2 19 9 12 2 5Z"/></svg>
+          <svg class="mistake-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2 12 9 19 2 22 5 15 12 22 19 19 22 12 15 5 22 2 19 9 12 2 5Z"/></svg>
+        </div>
+      </div>
+      <p id="status" class="sr-only" role="status">Loading your local recording.</p>
+      <div id="stage" class="stage" tabindex="0" aria-label="Four-lane note highway. Play using arrow keys.">
+        <canvas id="highway" aria-label="Notes fall toward four arrow targets. Beneath left: two long vertical lines. Beneath down: three long vertical lines. Beneath up: two short vertical lines. Beneath right: three short vertical lines."></canvas>
+        <div id="overlay" class="overlay">
+          <p id="overlay-kicker" class="sr-only">Ready when you are</p>
+          <strong id="overlay-main" aria-label="Ready">▶</strong>
+          <p id="overlay-detail" class="sr-only">Start begins a three-second countdown.</p>
+        </div>
+      </div>
+      <div class="timing-feedback">
+        <div id="judgment" class="judgment sr-only" aria-hidden="true"><span id="judgment-note"></span><strong id="judgment-timing"></strong></div>
+        <div id="timing-meter" class="timing-meter" role="img" aria-label="Early hits appear left, exact hits at center, and late hits right. Tolerance markers are at minus and plus 200 milliseconds.">
+          <span class="timing-axis" aria-hidden="true"></span>
+          <span class="timing-tick timing-limit-early" aria-hidden="true"></span>
+          <span class="timing-tick timing-exact" aria-hidden="true"></span>
+          <span class="timing-tick timing-limit-late" aria-hidden="true"></span>
+          <span id="timing-marker" class="timing-marker" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="track-progress" aria-hidden="true"><div id="progress"></div></div>
+    </section>
+  </main>
+  <audio id="audio" src="assets/animals.mp3" preload="auto"></audio>
+</body>
+</html>

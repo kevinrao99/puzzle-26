@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-hazards="hidden">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Jack be Nimble</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="game.js"></script>
+</head>
+<body>
+  <main aria-label="Checkpoint grid game">
+    <div class="controls">
+      <button id="restart" type="button" aria-label="Restart from the beginning" title="Restart">
+        <img class="restart-icon" src="assets/restart.png" alt="">
+      </button>
+      <button id="restart-checkpoint" type="button" aria-label="Restart from checkpoint; no checkpoint reached yet" title="Restart from checkpoint">
+        <img class="restart-icon" src="assets/restart.png" alt="">
+        <img class="flag-icon" src="assets/flag.png" alt="">
+        <span id="checkpoint-number" aria-hidden="true"></span>
+      </button>
+      <span id="completion-mark" role="img" aria-label="All checkpoints completed" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+      </span>
+    </div>
+    <div class="numbered-grid">
+      <div id="x-coordinates" class="coordinates" role="img" aria-label="Column coordinates: x increases from 0 to 16, left to right."></div>
+      <div id="y-coordinates" class="coordinates" role="img" aria-label="Row coordinates: y increases from 0 to 16, top to bottom."></div>
+      <div class="stage">
+        <div id="board" tabindex="0" role="img" aria-label="17 by 17 grid. Use arrow keys to reach checkpoint 1."></div>
+        <div id="death-overlay" class="overlay" hidden>
+          <p role="alert">You have died</p>
+        </div>
+      </div>
+    </div>
+    <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+  </main>
+</body>
+</html>

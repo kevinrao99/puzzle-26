@@ -1,0 +1,50 @@
+[
+  {
+    "file": "assets/white-03-scene-01.png",
+    "source": "codex-clipboard-c14be149-a62d-4bfd-85d2-e579cabcfefc.png",
+    "width": 2502,
+    "height": 1584,
+    "sha256": "153a690bd35b63ef747cad032a6413805a06d40b29140a8540b04eb011a8ce3e",
+    "bytes": 6835931
+  },
+  {
+    "file": "assets/white-03-scene-02.png",
+    "source": "codex-clipboard-aea859b3-c061-47e0-be96-c27e16da18d2.png",
+    "width": 2530,
+    "height": 1558,
+    "sha256": "658bea706e5f085d1cb5334185bd6781eca40748fa2b5f23cf1d1292450289ba",
+    "bytes": 6094883
+  },
+  {
+    "file": "assets/white-03-scene-03.png",
+    "source": "codex-clipboard-3f60d735-9edf-434d-9048-43753e56b549.png",
+    "width": 2372,
+    "height": 1612,
+    "sha256": "c3b7db565711de6b805d8cf805879470044e26c93efce4329cc6a8b8a9fde275",
+    "bytes": 5584491
+  },
+  {
+    "file": "assets/white-03-scene-04.png",
+    "source": "codex-clipboard-eb2923b6-5db5-4497-9018-c57c3b52caf3.png",
+    "width": 2508,
+    "height": 1528,
+    "sha256": "b7e66439a6b6b3abcfea695520b560fcf24fce80c043f102035d3e28a50f6322",
+    "bytes": 7316267
+  },
+  {
+    "file": "assets/white-03-scene-05.png",
+    "source": "codex-clipboard-4fa9d03d-03cf-404c-b289-7df19017e185.png",
+    "width": 2276,
+    "height": 1492,
+    "sha256": "41ce907ed48a9ba4efc6c7b4304be787651894faa6564dd74f526ee9a2e36b59",
+    "bytes": 5278527
+  },
+  {
+    "file": "assets/white-03-scene-06.png",
+    "source": "codex-clipboard-34cba261-8b00-450c-bb9a-a21a2254735c.png",
+    "width": 2540,
+    "height": 1568,
+    "sha256": "0d114d0591b6c2bbfed9865a466893904ad2786bf5e7fbe26ed6f4a574589a93",
+    "bytes": 6812670
+  }
+]

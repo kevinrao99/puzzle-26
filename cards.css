@@ -1,0 +1,69 @@
+.card-template-preview {
+  max-width: 760px;
+  margin-top: 48px;
+  color: #000;
+}
+
+.card-template-header {
+  max-width: 620px;
+  margin-bottom: 26px;
+}
+
+.card-template-kicker {
+  margin-bottom: 10px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+
+.card-template-header h2 {
+  margin-bottom: 12px;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+}
+
+.card-template-header > p:last-child {
+  margin-bottom: 0;
+  font-size: .92rem;
+  line-height: 1.6;
+}
+
+.card-template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  align-items: start;
+}
+
+.card-preview-item {
+  min-width: 0;
+  margin: 0;
+}
+
+.card-preview-number {
+  margin-bottom: 10px;
+  color: #000;
+  font: 400 .72rem var(--font-mono);
+  letter-spacing: .14em;
+}
+
+.hunt-card {
+  width: 100%;
+  max-width: 360px;
+  min-width: 0;
+  aspect-ratio: 5 / 7;
+  border-radius: 5.3% / 3.8%;
+  box-shadow: 0 12px 24px #00000024, 0 2px 4px #00000026;
+}
+
+.hunt-card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+@media (max-width: 600px) {
+  .card-template-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

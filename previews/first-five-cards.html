@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First five cards · Puzzle 26</title>
+    <link rel="stylesheet" href="../cards.css" />
+    <script src="../cards-data.js" defer></script>
+    <script src="../cards.js" defer></script>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 32px; background: #edf0f0; color: #000; font-family: system-ui, sans-serif; }
+      .card-template-preview { max-width: 1136px; margin: 0 auto; }
+      .card-template-header { margin-bottom: 28px; }
+      .card-template-header h2 { margin-top: 0; font-family: Georgia, serif; font-weight: 500; }
+      .card-template-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 28px; }
+      .card-preview-number { font-family: ui-monospace, monospace; }
+      @media (max-width: 920px) { .card-template-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 600px) {
+        body { padding: 20px; }
+        .card-template-grid { grid-template-columns: minmax(0, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="card-preview"></main>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => window.HuntCards.mountPreview(document.querySelector("#card-preview")));
+    </script>
+  </body>
+</html>
