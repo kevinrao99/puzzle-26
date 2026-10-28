@@ -6,7 +6,7 @@ window.PuzzleGrading = (() => {
   const TERMINAL = new Set(["complete", "compile_error", "failed"]);
   const LABELS = {
     uploading: "Uploading…",
-    queued: "Queued for grading…",
+    queued: "Queued...",
     compiling: "Compiling…",
     running: "Running tests…",
     scoring: "Calculating score…",

@@ -296,6 +296,20 @@ for (const failure of ["runtime failure", "compilation failure"]) {
   });
 }
 
+test("queued submissions show the concise status in feedback and history", async t => {
+  const { page } = await fixture(t, {
+    onPoll({ jobId, reply }) {
+      return reply({ jobId, status: "queued" });
+    },
+  });
+  await login(page);
+  await upload(page, "teams");
+  await page.waitForFunction(() => document.querySelector(".upload-feedback").textContent === "Queued...");
+  const history = await page.locator(".grading-part").first().locator(".submission-history").textContent();
+  assert.ok(history.includes("Queued..."));
+  assert.ok(!history.includes("Queued for grading"));
+});
+
 test("repeated submit actions create one upload while grading is pending", async t => {
   let complete = false;
   const { page, uploads } = await fixture(t, {
