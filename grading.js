@@ -415,7 +415,7 @@ window.PuzzleGrading = (() => {
         root.querySelector(".grading-access").hidden = parts.every((part) => hasFullScore(attempts[part.id]));
         connection.textContent = configurationError || (!baseUrl
           ? "Grading will be available here once the server is connected."
-          : authMessage || (authenticated ? "Connected to the grading server." : ""));
+          : authMessage || (authenticated ? "Connected" : ""));
         connection.hidden = !connection.textContent;
         loginForm.hidden = !baseUrl || authenticated;
         loginButton.disabled = authBusy;

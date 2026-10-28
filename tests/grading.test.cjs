@@ -103,7 +103,7 @@ async function fixture(t, options = {}) {
 async function login(page, code = "Private-code_123!") {
   await page.locator("#grading-access-code").fill(code);
   await page.locator(".grading-login-form button").click();
-  await page.waitForFunction(() => document.querySelector(".grading-connection").textContent.includes("Connected to"));
+  await page.waitForFunction(() => document.querySelector(".grading-connection").textContent === "Connected");
 }
 
 async function chooseFile(page, part, name = `${part}.cpp`, buffer = Buffer.from(SOURCE)) {
