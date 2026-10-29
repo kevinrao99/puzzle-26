@@ -206,7 +206,7 @@ const SITE_CONFIG = {
       } : {}),
       ...(category.id === "blue" && originalNumber === 1 ? {
         name: "Jack be Nimble",
-        subtitle: "He'll also need to be a bit clever this time",
+        subtitle: "And also careful where he steps",
         answerHash: ANSWER_HASHES.jackBeNimble,
         interactive: "nimGame",
       } : {}),
@@ -218,7 +218,7 @@ const SITE_CONFIG = {
       } : {}),
       ...(category.id === "blue" && originalNumber === 2 ? {
         name: "Endless Gacha",
-        subtitle: "Average gacha addict spending habits",
+        subtitle: "Never stop pulling",
         answerHash: ANSWER_HASHES.pad,
         interactive: "rareEggMachine",
       } : {}),
@@ -1165,7 +1165,7 @@ function renderPuzzle(category, puzzle, feedback = null) {
     recordAttempt(puzzle.id, answer, solved);
     renderPuzzle(category, puzzle, solved ? null : {
       type: "error",
-      message: "Not quite. Try again.",
+      message: "Incorrect",
     });
   });
 }

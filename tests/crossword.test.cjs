@@ -308,7 +308,7 @@ test("Red 03 rejects ANSWER, accepts normalized GLORYBRINGER, and preserves othe
   const page = await fixture(t);
   await page.locator("#puzzle-answer").fill("answer");
   await page.locator("#puzzle-answer").press("Enter");
-  await page.getByText("Not quite. Try again.", { exact: true }).waitFor();
+  await page.getByText("Incorrect", { exact: true }).waitFor();
   await page.locator("#puzzle-answer").fill("  gLoRy-bringer!  ");
   assert.equal(await page.locator("#puzzle-answer").inputValue(), "  GLORYBRINGER  ");
   await page.locator("#puzzle-answer").press("Enter");

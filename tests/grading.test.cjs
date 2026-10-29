@@ -139,7 +139,7 @@ test("GREEN solves without grading or sign-in, rejects ANSWER, and leaves other 
   assert.equal(await page.locator(".grading-part").first().locator("button[type=submit]").isDisabled(), true);
   await page.locator("#puzzle-answer").fill("ANSWER");
   await page.locator("#puzzle-answer").press("Enter");
-  await page.getByText("Not quite. Try again.", { exact: true }).waitFor();
+  await page.getByText("Incorrect", { exact: true }).waitFor();
   await page.locator("#puzzle-answer").fill("  gRe-en!  ");
   assert.equal(await page.locator("#puzzle-answer").inputValue(), "  GREEN  ");
   await page.locator("#puzzle-answer").press("Enter");

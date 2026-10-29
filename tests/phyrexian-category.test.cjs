@@ -240,7 +240,7 @@ for (const hosted of [false, true]) {
       const input = page.getByRole("textbox", { name: "Answer", exact: true });
       await input.fill("wrong");
       await input.press("Enter");
-      await page.getByText("Not quite. Try again.", { exact: true }).waitFor();
+      await page.getByText("Incorrect", { exact: true }).waitFor();
       await input.fill(answer.toLowerCase());
       await input.press("Enter");
       await page.locator(".correct-attempt").waitFor();
@@ -335,7 +335,7 @@ for (const [width, hosted] of [[1152, false], [320, true]]) {
     assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), progress);
     await page.locator("#puzzle-answer").fill("ANSWER");
     await page.locator("#puzzle-answer").press("Enter");
-    await page.getByText("Not quite. Try again.", { exact: true }).waitFor();
+    await page.getByText("Incorrect", { exact: true }).waitFor();
     if (process.env.PUZZLE_SCREENSHOT_DIR) {
       await page.screenshot({ path: path.join(process.env.PUZZLE_SCREENSHOT_DIR, `phyrexian-transformations-${width}.png`), fullPage: true });
     }

@@ -64,7 +64,7 @@ for (const width of [1152, 320]) {
     for (const answer of ["ANSWER", "INVALID"]) {
       await page.locator("#puzzle-answer").fill(answer);
       await page.getByRole("button", { name: "Submit answer", exact: true }).click();
-      await page.getByText("Not quite. Try again.", { exact: true }).waitFor();
+      await page.getByText("Incorrect", { exact: true }).waitFor();
       await page.waitForFunction(value => [...document.querySelectorAll(".attempt-list li")].at(-1)?.textContent === value, answer);
     }
     await page.locator(".assembly-piece").first().waitFor();
@@ -131,7 +131,7 @@ for (const width of [1152, 320]) {
     await page.goto(URL + "#/puzzle/blue-1");
     await page.locator("#puzzle-answer").fill("wrong");
     await page.locator("#puzzle-answer").press("Enter");
-    await page.getByText("Not quite. Try again.", { exact: true }).waitFor();
+    await page.getByText("Incorrect", { exact: true }).waitFor();
     assert.equal(await page.locator("#puzzle-answer").isEnabled(), true);
     assert.equal(await page.locator(".correct-attempt").count(), 0);
     await page.locator("#puzzle-answer").fill("  may-nard!  ");

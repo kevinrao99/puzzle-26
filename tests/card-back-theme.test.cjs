@@ -168,7 +168,7 @@ for (const width of [1152, 320]) {
     assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), progress);
     await input.fill("wrong");
     await input.press("Enter");
-    await page.getByText("Not quite. Try again.", { exact: true }).waitFor();
+    await page.getByText("Incorrect", { exact: true }).waitFor();
     assert.deepEqual(await attempts.locator("li").allTextContents(), ["WRONG"]);
     await input.fill("lands!");
     assert.equal(await input.inputValue(), "LANDS");
