@@ -669,7 +669,7 @@ function renderIdentityGate(feedback = null) {
 
     renderIdentityGate({
       type: "error",
-      message: "That password does not match.",
+      message: "invalid",
     });
   });
 }

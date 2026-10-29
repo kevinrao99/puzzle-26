@@ -235,7 +235,7 @@ for (const width of [1152, 320]) {
     await page.getByRole("button", { name: "Close instructions", exact: true }).click();
     await page.locator("#identity-answer").fill("WRONG");
     await page.getByRole("button", { name: "Submit identity verification", exact: true }).click();
-    await page.getByText("That password does not match.", { exact: true }).waitFor();
+    await page.getByText("invalid", { exact: true }).waitFor();
     assert.equal(await animationName(), "identity-help-blink");
 
     await page.locator("#identity-answer").fill("BUM");
@@ -299,7 +299,7 @@ test(`identity gate matches the main palette and keeps normal verification at ${
   if (process.env.PUZZLE_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.PUZZLE_SCREENSHOT_DIR, `identity-${width}.png`), fullPage: true });
   await page.locator("#identity-answer").fill("WRONG");
   await submit.click();
-  await page.getByText("That password does not match.", { exact: true }).waitFor();
+  await page.getByText("invalid", { exact: true }).waitFor();
   assert.equal(await page.locator(".identity-page .feedback").evaluate(el => getComputedStyle(el).color), "rgb(255, 227, 207)");
   await page.locator("#identity-answer").fill("bum");
   if (width === 320) await page.locator("#identity-answer").press("Enter");
