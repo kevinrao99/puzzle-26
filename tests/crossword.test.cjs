@@ -1,5 +1,7 @@
 "use strict";
 
+const { allowUnrestrictedNavigation } = require("./helpers/navigation.cjs");
+
 const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
 const { readFile } = require("node:fs/promises");
@@ -165,6 +167,7 @@ after(async () => {
 async function fixture(t, width = 1152, hosted = false) {
   const context = await browser.newContext({ viewport: { width, height: 950 }, reducedMotion: "reduce" });
   t.after(() => context.close());
+  await allowUnrestrictedNavigation(context);
   const page = await context.newPage(), errors = [], remote = [], failures = [];
   page.setDefaultTimeout(10000);
   page.on("pageerror", error => errors.push(error.message));
@@ -327,5 +330,5 @@ test("Red 03 rejects ANSWER, accepts normalized GLORYBRINGER, and preserves othe
   assert.equal(await page.locator("#crossword-down li").count(), 13);
   assert.equal(await page.locator("#puzzle-image").getAttribute("src"), "assets/red-01-crossword.svg");
   await page.locator("#back-button").click();
-  await page.locator('.puzzle-button:nth-child(3) .puzzle-status:text-is("GLORYBRINGER")').waitFor();
+  await page.locator('[data-puzzle-id="red-1"] .puzzle-status:text-is("GLORYBRINGER")').waitFor();
 });

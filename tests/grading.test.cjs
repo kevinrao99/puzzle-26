@@ -1,5 +1,7 @@
 "use strict";
 
+const { allowUnrestrictedNavigation } = require("./helpers/navigation.cjs");
+
 const RARITY_ASSETS = ["common", "uncommon", "rare", "mythic"].map(tier => `assets/donkey-${tier}.png`);
 const PHYREXIAN_ASSETS = ["assets/Phyrexian-Regular.ttf", "assets/phyrexian-symbol.png"];
 
@@ -47,6 +49,7 @@ after(async () => {
 async function fixture(t, options = {}) {
   const context = await browser.newContext({ viewport: { width: 1152, height: 900 }, reducedMotion: "reduce", hasTouch: options.hasTouch === true });
   t.after(() => context.close());
+  await allowUnrestrictedNavigation(context);
   const page = await context.newPage();
   const errors = [];
   const uploads = [];
@@ -79,6 +82,7 @@ async function fixture(t, options = {}) {
       return reply({ token: "solver-session-only", expiresAt: new Date(Date.now() + 3600000).toISOString() });
     }
     assert.equal(request.headers().authorization, "Bearer solver-session-only");
+    if (url.pathname.endsWith("/ack") && request.method() === "POST") return reply({ acknowledged: true });
     if (url.pathname === "/submissions" && request.method() === "POST") {
       uploads.push(request.postDataBuffer().toString());
       if (options.uploadFailure) return reply({}, options.uploadFailure);
@@ -457,6 +461,23 @@ test("malformed score never completes the part or reveals the answer", async (t)
   assert.equal(await page.locator(".part-complete").count(), 0);
 });
 
+test("expired temporary result permits a fresh submission without inventing a grade", async (t) => {
+  const { page, uploads } = await fixture(t, {
+    onPoll: ({ reply }) => reply({ message: "Submission not found." }, 404),
+  });
+  await login(page);
+  await upload(page, "teams");
+  await page.waitForFunction(() => document.querySelector(".upload-feedback").textContent === "Processing failed.");
+  assert.equal(await page.locator("#teams-file").isEnabled(), true);
+  const last = await page.evaluate(() => JSON.parse(localStorage.getItem("puzzle-26:v1:progress")).puzzles["blue-4"].grading.teams.at(-1));
+  assert.equal(last.status, "failed");
+  assert.equal(last.score, null);
+  await upload(page, "teams");
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem("puzzle-26:v1:progress")).puzzles["blue-4"].grading.teams.length === 2);
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem("puzzle-26:v1:progress")).puzzles["blue-4"].grading.teams.at(-1).status === "failed");
+  assert.equal(uploads.length, 2);
+});
+
 test("clear local progress removes grading data and sign-in, including active polling", async (t) => {
   const { page } = await fixture(t, {
     onPoll: ({ jobId, reply }) => reply({ jobId, status: "running" }),
@@ -490,6 +511,7 @@ test("mobile layout stays within viewport", async (t) => {
 test("file preview loads actual scripts and asks for a private code without contacting the gateway", async (t) => {
   const context = await browser.newContext({ viewport: { width: 1152, height: 900 }, reducedMotion: "reduce" });
   t.after(() => context.close());
+  await allowUnrestrictedNavigation(context);
   const page = await context.newPage();
   let gatewayRequests = 0;
   await page.route("https://13.59.146.74/**", route => { gatewayRequests++; return route.abort(); });

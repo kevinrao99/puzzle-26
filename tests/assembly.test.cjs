@@ -1,4 +1,6 @@
 "use strict";
+
+const { allowUnrestrictedNavigation } = require("./helpers/navigation.cjs");
 const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
@@ -30,6 +32,7 @@ after(async () => { await browser?.close(); if (server) await new Promise(resolv
 async function fixture(t, { hunt = false, url, mobile = false } = {}) {
   const context = await browser.newContext({ viewport: { width: mobile ? 390 : 1440, height: mobile ? 844 : 1100 }, hasTouch: mobile, isMobile: mobile });
   t.after(() => context.close());
+  await allowUnrestrictedNavigation(context);
   const page = await context.newPage(), errors = [], remote = [];
   page.setDefaultTimeout(10000);
   page.on("pageerror", error => errors.push(error.message));

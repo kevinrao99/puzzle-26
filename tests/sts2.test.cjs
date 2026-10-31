@@ -1,5 +1,7 @@
 "use strict";
 
+const { allowUnrestrictedNavigation } = require("./helpers/navigation.cjs");
+
 const RARITY_ASSETS = ["common", "uncommon", "rare", "mythic"].map(tier => `assets/donkey-${tier}.png`);
 const PHYREXIAN_ASSETS = ["assets/Phyrexian-Regular.ttf", "assets/phyrexian-symbol.png"];
 
@@ -48,6 +50,7 @@ after(async () => {
 async function fixture(t, width = 1152, localFile = true) {
   const context = await browser.newContext({ viewport: { width, height: 950 }, reducedMotion: "reduce" });
   t.after(() => context.close());
+  await allowUnrestrictedNavigation(context);
   const page = await context.newPage(), errors = [], unexpectedRequests = [];
   page.setDefaultTimeout(10000);
   page.setDefaultNavigationTimeout(10000);

@@ -122,11 +122,60 @@ const RED_CROSSWORD_CLUES = {
   ],
 };
 
+// Card/person assignments from the task handouts; keyed by stable puzzle route, not list position.
+const PUZZLE_TASKS = Object.freeze({
+  "white-3": {
+    card: "Ajani, Sleeper Agent", person: "Helen Wang",
+    text: "Cook a dish together (a real dish not some mochi thing or baking - I know you’re gonna try to cop out)",
+  },
+  "white-4": {
+    card: "Elesh Norn, Grand Cenobite", person: "Eric",
+    text: "Give a presentation on our Laval escape room trips and convince him to join the next time. Must bring slides.",
+  },
+  "blue-2": {
+    card: "Jace, the Perfected Mind", person: "Awei",
+    text: "Present your Double Trouble solutions and convince him beyond reasonable doubt that you didn’t cheat.",
+  },
+  "blue-3": {
+    card: "Jin-Gitaxias, Core Augur", person: "Bryan",
+    text: "Take an Oregon quiz together. You owe 10 bucks if you score lower. Brian will have the QR code for the quiz.",
+  },
+  "black-3": {
+    card: "Vraska, Betrayal's Sting", person: "Aivant",
+    text: "Take a polaroid recreating a Shabaloth night. Additional actors allowed.",
+  },
+  "black-4": {
+    card: "Sheoldred, Whispering One", person: "Helen Huang",
+    text: "Put a donut on each finger and perform a joke about the Towers of Hanoi",
+  },
+  "red-1": {
+    card: "Lukka, Bound to Ruin", person: "Moe",
+    text: "Just take her out on a date or something idk",
+  },
+  "red-4": {
+    card: "Urabrask the Hidden", person: "Annie",
+    text: "Do the pictured wheelbarrow walk, must have video evidence of taking 5 steps successfully. If Annie’s grip isn’t strong enough it can be Peter but it should really be Annie if possible",
+    image: "assets/task-wheelbarrow.png",
+  },
+  "green-3": {
+    card: "Nissa, Ascended Animist", person: "April",
+    text: "Run a sub 8 minute mile together",
+  },
+  "green-4": {
+    card: "Vorinclex, Voice of Hunger", person: "Krao",
+    text: "Revert Curiosity and Arcane Bombardment nerfs",
+  },
+});
+
 const SITE_CONFIG = {
-  categories: CATEGORY_DEFINITIONS.map((category) => ({
+  categories: CATEGORY_DEFINITIONS.map((category, categoryIndex) => ({
     ...category,
-    unlock: { type: "always" },
-    lockedBehavior: "disabled",
+    // Every earlier color must be complete; Phyrexian follows all five colors.
+    unlock: categoryIndex === 0 ? { type: "always" } : {
+      type: "allCategoriesSolved",
+      categoryIds: CATEGORY_DEFINITIONS.slice(0, categoryIndex).map(item => item.id),
+    },
+    lockedBehavior: "hidden",
     // Keep IDs stable when reordering so browser-local progress follows its puzzle.
     puzzles: (category.id === "phyrexian" ? [1, 2, 3] : category.id === "blue" ? [1, 4, 2, 3] : category.id === "green" ? [2, 1, 3, 4] : category.id === "red" ? [3, 2, 1, 4] : [1, 2, 3, 4]).map((originalNumber, index) => ({
       id: `${category.id}-${originalNumber}`,
@@ -136,8 +185,12 @@ const SITE_CONFIG = {
       ...(category.id === "phyrexian" ? PHYREXIAN_PUZZLE_TITLES[index] : {}),
       number: index + 1,
       tier: category.id === "phyrexian" ? "mythic" : PUZZLE_TIERS_BY_POSITION[index],
+      task: PUZZLE_TASKS[`${category.id}-${originalNumber}`] ?? null,
       answerHash: ANSWER_HASHES.puzzle,
-      unlock: { type: "always" },
+      unlock: category.id === "phyrexian" && index > 0 ? {
+        type: "allSolved",
+        puzzleIds: Array.from({ length: index }, (_, previous) => `phyrexian-${previous + 1}`),
+      } : { type: "always" },
       lockedBehavior: "disabled",
       ...(category.id === "phyrexian" && originalNumber === 1 ? {
         letterEncoding: PHYREXIAN_ENCODING_PUZZLE,
@@ -325,6 +378,7 @@ let unmountAssembly = null;
 let assemblyResources = null;
 let animalResources = null;
 let unmountAnimals = null;
+let closeTaskEnvelope = null;
 
 function loadAnimalResources() {
   if (!animalResources) {
@@ -504,6 +558,13 @@ function isUnlocked(rule) {
     return rule.puzzleIds.every((id) => getPuzzleState(id).solved);
   }
 
+  if (rule.type === "allCategoriesSolved") {
+    return rule.categoryIds.every((id) => {
+      const category = findCategory(id);
+      return category?.puzzles.length > 0 && category.puzzles.every(puzzle => getPuzzleState(puzzle.id).solved);
+    });
+  }
+
   if (rule.type === "anySolvedCount") {
     const solvedCount = rule.puzzleIds.filter(
       (id) => getPuzzleState(id).solved,
@@ -570,6 +631,7 @@ function validateSiteConfig() {
 }
 
 function renderRoute() {
+  closeTaskEnvelope?.();
   disposeAnimals();
   disposeAssembly();
   if (unmountEggMachine) {
@@ -595,6 +657,10 @@ function renderRoute() {
   if (segments[0] === "category" && segments.length === 2) {
     const category = findCategory(segments[1]);
     if (category) {
+      if (!isUnlocked(category.unlock)) {
+        window.location.replace("#/");
+        return;
+      }
       renderCategory(category);
       return;
     }
@@ -603,6 +669,14 @@ function renderRoute() {
   if (segments[0] === "puzzle" && segments.length === 2) {
     const match = findPuzzle(segments[1]);
     if (match) {
+      if (!isUnlocked(match.category.unlock)) {
+        window.location.replace("#/");
+        return;
+      }
+      if (!isUnlocked(match.puzzle.unlock)) {
+        window.location.replace(`#/category/${match.category.id}`);
+        return;
+      }
       renderPuzzle(match.category, match.puzzle);
       return;
     }
@@ -843,6 +917,7 @@ function puzzleNavigationLabel(category, puzzle) {
 }
 
 function renderCategory(category) {
+  closeTaskEnvelope?.();
   document.title = `${category.name} · Puzzle 26`;
   app.innerHTML = `
     <section class="page category-page" aria-label="${category.name} puzzles">
@@ -870,6 +945,9 @@ function renderCategory(category) {
     }
 
     const puzzleState = getPuzzleState(puzzle.id);
+    const row = document.createElement("div");
+    row.className = "puzzle-list-item";
+    row.dataset.puzzleId = puzzle.id;
     const button = document.createElement("button");
     button.className = "puzzle-button";
     button.type = "button";
@@ -882,14 +960,16 @@ function renderCategory(category) {
       ${renderRaritySymbol(puzzle)}
       <span class="puzzle-name${puzzle.nameScript ? " puzzle-name--phyrexian" : ""}">${puzzle.nameScript ? "" : puzzle.name}</span>
       <span class="puzzle-status ${puzzleState.solved ? "solved" : ""}${puzzleState.solved && category.id === "green" ? " puzzle-status--check" : ""}">
-        ${puzzleState.solved ? "✓" : unlocked ? "" : "LOCKED"}
+        ${puzzleState.solved ? "✓" : unlocked || category.id === "phyrexian" ? "" : "LOCKED"}
       </span>
     `;
     if (puzzle.nameScript) {
       renderPhyrexianText(button.querySelector(".puzzle-name"), puzzle.nameScript, "puzzle-name-inscription");
     }
     button.addEventListener("click", () => navigate(`/puzzle/${puzzle.id}`));
-    list.append(button);
+    row.append(button);
+    list.append(row);
+    if (puzzleState.solved && puzzle.task) renderTaskEnvelope(row, puzzle);
     if (puzzleState.solved && category.id !== "green") {
       const status = button.querySelector(".puzzle-status");
       status.id = `puzzle-status-${puzzle.id}`;
@@ -899,6 +979,103 @@ function renderCategory(category) {
       });
     }
   }
+}
+
+function renderTaskEnvelope(row, puzzle) {
+  const task = puzzle.task;
+  const wrapper = document.createElement("div");
+  wrapper.className = "puzzle-task";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "task-envelope";
+  button.setAttribute("aria-label", `Task from ${task.person}`);
+  button.setAttribute("aria-expanded", "false");
+  button.innerHTML = '<svg viewBox="0 0 32 24" aria-hidden="true" focusable="false"><rect x="2" y="3" width="28" height="18" rx="2"/><path d="m3 5 13 10L29 5M3 20l9-8m17 8-9-8"/></svg>';
+  const tooltip = document.createElement("div");
+  tooltip.className = "task-popover";
+  tooltip.id = `task-${puzzle.id}`;
+  tooltip.setAttribute("role", "tooltip");
+  tooltip.hidden = true;
+  button.setAttribute("aria-describedby", tooltip.id);
+  button.setAttribute("aria-controls", tooltip.id);
+  const person = document.createElement("p");
+  person.className = "task-person";
+  person.textContent = task.person;
+  const description = document.createElement("p");
+  description.className = "task-description";
+  description.textContent = task.text;
+  tooltip.append(person, description);
+  let picture = null;
+  if (task.image) {
+    picture = document.createElement("img");
+    picture.className = "task-picture";
+    picture.alt = "Wheelbarrow walk: one person walks on their hands while a partner holds their ankles.";
+    picture.width = 638;
+    picture.height = 313;
+    picture.addEventListener("load", () => { if (!tooltip.hidden) position(); });
+    tooltip.append(picture);
+  }
+  wrapper.append(button, tooltip);
+  row.append(wrapper);
+
+  let pinned = false;
+  let hideTimer = null;
+  let openEvents = null;
+  function position() {
+    const anchor = button.getBoundingClientRect();
+    const height = tooltip.getBoundingClientRect().height;
+    const below = anchor.bottom + 10;
+    const above = anchor.top - height - 10;
+    const top = below + height <= innerHeight - 12 ? below
+      : above >= 12 ? above : Math.max(12, innerHeight - height - 12);
+    tooltip.style.top = `${top - row.getBoundingClientRect().top}px`;
+  }
+  function hide() {
+    clearTimeout(hideTimer);
+    tooltip.hidden = true;
+    button.setAttribute("aria-expanded", "false");
+    pinned = false;
+    openEvents?.abort();
+    openEvents = null;
+    if (closeTaskEnvelope === hide) closeTaskEnvelope = null;
+  }
+  function show() {
+    clearTimeout(hideTimer);
+    if (!tooltip.hidden) return;
+    closeTaskEnvelope?.();
+    closeTaskEnvelope = hide;
+    tooltip.hidden = false;
+    button.setAttribute("aria-expanded", "true");
+    if (picture && !picture.hasAttribute("src")) picture.src = task.image;
+    position();
+    openEvents = new AbortController();
+    const options = { signal: openEvents.signal };
+    document.addEventListener("pointerdown", event => {
+      if (!wrapper.contains(event.target)) hide();
+    }, options);
+    document.addEventListener("focusin", event => {
+      if (!wrapper.contains(event.target)) hide();
+    }, options);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") { hide(); event.preventDefault(); }
+    }, options);
+    window.addEventListener("resize", position, options);
+    window.addEventListener("scroll", position, { ...options, capture: true });
+  }
+  wrapper.addEventListener("pointerenter", event => {
+    if (event.pointerType !== "touch") show();
+  });
+  wrapper.addEventListener("pointerleave", () => {
+    if (!pinned && !wrapper.contains(document.activeElement)) hideTimer = setTimeout(hide, 160);
+  });
+  wrapper.addEventListener("focusin", show);
+  wrapper.addEventListener("focusout", event => {
+    if (!pinned && !wrapper.contains(event.relatedTarget)) hide();
+  });
+  button.addEventListener("click", () => {
+    pinned = !pinned;
+    if (pinned) show(); else hide();
+  });
 }
 
 function renderPuzzleSubtitle(puzzle) {
@@ -929,6 +1106,7 @@ function renderPuzzleSubtitle(puzzle) {
 }
 
 function renderPuzzle(category, puzzle, feedback = null) {
+  closeTaskEnvelope?.();
   disposeAnimals();
   disposeAssembly();
   if (unmountEggMachine) {

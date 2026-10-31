@@ -495,12 +495,98 @@ h2 {
   gap: 12px;
 }
 
+.puzzle-list-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+.puzzle-list:has(.task-envelope) .puzzle-list-item {
+  grid-template-columns: minmax(0, 1fr) 48px;
+  column-gap: 12px;
+}
+
+.puzzle-list-item:has(.task-popover:not([hidden])) {
+  z-index: 5;
+}
+
+.task-envelope {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--field);
+  cursor: pointer;
+}
+
+.task-envelope:hover,
+.task-envelope[aria-expanded="true"] {
+  background: #8b5523;
+  border-color: #b38a50;
+}
+
+.task-envelope:focus-visible {
+  outline-color: var(--field);
+}
+
+.task-envelope svg {
+  width: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.task-popover {
+  position: absolute;
+  z-index: 6;
+  right: 0;
+  width: min(390px, 100%);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px;
+  border: 1px solid #b38a50;
+  border-radius: 14px;
+  background: var(--field);
+  color: var(--ink);
+  box-shadow: 0 12px 32px #160e08a6;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.task-person {
+  margin: 0 0 8px;
+  font-weight: 800;
+}
+
+.task-description {
+  margin: 0;
+}
+
+.task-picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 16px;
+  border-radius: 6px;
+}
+
 .puzzle-button {
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 18px;
   align-items: center;
   width: 100%;
+  min-width: 0;
   min-height: 82px;
   padding: 18px 22px;
   border: 1px solid var(--line);
@@ -521,6 +607,8 @@ h2 {
 }
 
 .puzzle-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-weight: 900;
   letter-spacing: 0.09em;
 }
@@ -1272,6 +1360,21 @@ input:disabled {
 
   .puzzle-button {
     grid-template-columns: auto 1fr;
+  }
+
+  .puzzle-list:has(.task-envelope) .puzzle-list-item {
+    grid-template-columns: minmax(0, 1fr) 44px;
+    column-gap: 8px;
+  }
+
+  .task-envelope {
+    width: 44px;
+    height: 44px;
+  }
+
+  .puzzle-list:has(.task-envelope) .puzzle-button {
+    padding: 16px 12px;
+    gap: 12px;
   }
 
   .puzzle-status {

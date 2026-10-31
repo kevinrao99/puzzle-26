@@ -1,5 +1,7 @@
 "use strict";
 
+const { allowUnrestrictedNavigation } = require("./helpers/navigation.cjs");
+
 const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
@@ -28,6 +30,7 @@ after(async () => { await browser?.close(); });
 async function fixture(t, width = 1152) {
   const context = await browser.newContext({ viewport: { width, height: 950 }, reducedMotion: "reduce" });
   t.after(() => context.close());
+  await allowUnrestrictedNavigation(context);
   const page = await context.newPage(), errors = [], unexpectedRequests = [];
   page.setDefaultTimeout(10000);
   page.setDefaultNavigationTimeout(10000);

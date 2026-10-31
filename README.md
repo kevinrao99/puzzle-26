@@ -38,8 +38,19 @@ require authoring sources maintained outside this repository.
 Progress is stored in the current browser. It does not automatically synchronize
 between devices or transfer from a local preview to the published website.
 The help dialog includes a control to clear locally saved progress.
+Submission history and full-score completion are browser-local too. Signing in
+with a shared grading access code never restores or shares another browser's
+results. Clearing local progress removes this browser's history and permits a
+fresh attempt, including after a previous full score.
 
 The browser-side identity gate is part of the hunt, not a security boundary.
+
+White is available first. Completing all four puzzles in each color reveals the
+next color in order: White → Blue → Black → Red → Green. All preceding colors
+must remain complete. Phyrexian appears after all 20 color puzzles are solved;
+its three puzzles stay visible but unlock sequentially. Envelope tasks do not
+add completion requirements. These rules use existing local progress without
+resetting it, and direct links respect the same locks.
 
 Code submissions use a separate authenticated HTTPS grading service.
 Publishing this frontend does not deploy that service. Its CORS configuration
@@ -70,6 +81,10 @@ node --test --test-concurrency=1 tests/*.test.cjs
 
 Set `NODE_PATH` if Playwright is installed outside the repository.
 Test dependencies are not required by the published website.
+
+Component tests explicitly use `tests/helpers/navigation.cjs` to visit puzzles
+out of order without changing saved progress. `tests/unlocks.test.cjs` tests the
+unmodified production sequence, hidden buttons, and deep-link guards.
 
 ## Third-party assets
 
