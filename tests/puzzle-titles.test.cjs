@@ -13,7 +13,7 @@ const SUBTITLES = {
   "white-2": "Good thing they are",
   "white-3": "She'd love these views",
   "white-4": "But beloved all the same",
-  "blue-1": "And also careful where he steps",
+  "blue-1": "And be careful where he steps",
   "blue-4": "It would be so cringe if you cheated on this one",
   "blue-2": "Never stop pulling",
   "blue-3": "Where we put the pedal to the medal",

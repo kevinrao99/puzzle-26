@@ -206,7 +206,7 @@ const SITE_CONFIG = {
       } : {}),
       ...(category.id === "blue" && originalNumber === 1 ? {
         name: "Jack be Nimble",
-        subtitle: "And also careful where he steps",
+        subtitle: "And be careful where he steps",
         answerHash: ANSWER_HASHES.jackBeNimble,
         interactive: "nimGame",
       } : {}),
