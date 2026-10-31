@@ -66,7 +66,6 @@ window.PuzzleGrading = (() => {
     let session = null;
     let authBusy = false;
     let authMessage = "";
-    let restoredSession = false;
 
     try {
       const saved = JSON.parse(sessionStorage.getItem(SESSION_KEY));
@@ -122,7 +121,11 @@ window.PuzzleGrading = (() => {
         }
         if (response.status === 413) throw new Error("This file exceeds the server’s upload limit.");
         if (response.status === 429) throw new Error("The server is busy. Please wait before trying again.");
-        if (!response.ok) throw new Error(`The server could not complete the request (${response.status}).`);
+        if (!response.ok) {
+          const error = new Error(`The server could not complete the request (${response.status}).`);
+          error.status = response.status;
+          throw error;
+        }
         const data = await response.json();
         if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("Invalid server response.");
         return data;
@@ -157,7 +160,12 @@ window.PuzzleGrading = (() => {
       const deadline = Date.now() + config.pollTimeoutMs;
       try {
         while (!destroyed && connected() && PENDING.has(attempt.status)) {
-          const data = await request(`/submissions/${encodeURIComponent(attempt.jobId)}`);
+          let data;
+          try { data = await request(`/submissions/${encodeURIComponent(attempt.jobId)}`); }
+          catch (error) {
+            if (error.status !== 404) throw error;
+            data = { jobId: attempt.jobId, status: "failed", message: "This result expired. Submit again." };
+          }
           if (destroyed) return;
           if (data.jobId !== attempt.jobId || (!PENDING.has(data.status) && !TERMINAL.has(data.status))) {
             throw new Error("The server returned an unexpected job response. Check its status again.");
@@ -166,13 +174,20 @@ window.PuzzleGrading = (() => {
               (!Number.isFinite(data.score) || data.score < 0 || data.score > 100 || data.maximumScore !== 100)) {
             throw new Error("The server did not return a valid score out of 100. Check its status again.");
           }
+          const previous = { ...attempt };
           attempt.status = data.status;
           attempt.score = data.status === "complete" ? data.score : null;
           attempt.maximumScore = data.status === "complete" ? data.maximumScore : null;
           attempt.compileOutput = typeof data.compileOutput === "string" ? data.compileOutput.slice(0, 8192) : "";
           attempt.message = typeof data.message === "string" ? data.message.slice(0, 500) : "";
-          notify(true);
-          if (!PENDING.has(attempt.status)) return;
+          // Never discard the server's temporary result until the browser has saved it.
+          try { notify(true); }
+          catch (error) { Object.assign(attempt, previous); throw error; }
+          if (!PENDING.has(attempt.status)) {
+            void request(`/submissions/${encodeURIComponent(attempt.jobId)}/ack`, { method: "POST" })
+              .catch(() => {}); // Uncollected results also expire automatically.
+            return;
+          }
           if (Date.now() >= deadline) throw new Error("This is taking longer than expected. Check its status again later.");
           await waitForPoll();
         }
@@ -192,25 +207,6 @@ window.PuzzleGrading = (() => {
       }
     }
 
-    async function restoreHistory() {
-      if (!config.recoverHistory) return;
-      const data = await request('/history');
-      if (!Array.isArray(data.submissions) || data.submissions.length > 102) throw new Error('The server returned invalid submission history.');
-      const restored = {};
-      for (const part of parts) {
-        const rows = data.submissions.filter(item => item.task === part.taskId);
-        if (rows.some(item => typeof item.jobId !== 'string' || !item.jobId ||
-            (!PENDING.has(item.status) && !TERMINAL.has(item.status)) ||
-            (item.status === 'complete' && (!Number.isFinite(item.score) || item.score < 0 || item.score > 100 || item.maximumScore !== 100)))) {
-          throw new Error('The server returned invalid submission history.');
-        }
-        restored[part.id] = normalizeAttempts(rows.map(item => ({ ...item, id: item.jobId })));
-      }
-      Object.assign(attempts, restored);
-      restoredSession = true;
-      notify(true);
-    }
-
     async function login(accessCode) {
       authBusy = true;
       authMessage = "Connecting…";
@@ -221,7 +217,6 @@ window.PuzzleGrading = (() => {
         if (!validSession(data)) throw new Error("The server did not return a valid session. Please contact the hunt organizer.");
         session = { baseUrl, token: data.token, expiresAt: data.expiresAt };
         try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch { /* Keep session in memory. */ }
-        await restoreHistory();
         authMessage = "";
         resumeJobs();
       } catch (error) {
@@ -411,13 +406,7 @@ window.PuzzleGrading = (() => {
       }
       listeners.add(update);
       update();
-      if (config.recoverHistory && connected() && !restoredSession) {
-        authBusy = true;
-        notify();
-        void restoreHistory().then(resumeJobs).catch(error => {
-          session = null; clearSession(); authMessage = error.message;
-        }).finally(() => { authBusy = false; notify(); });
-      } else resumeJobs();
+      resumeJobs();
       return () => listeners.delete(update);
     }
 
