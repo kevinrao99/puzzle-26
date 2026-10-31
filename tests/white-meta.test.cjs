@@ -82,7 +82,7 @@ test("NOTRE DAME solves White meta with normal whitespace handling and saved pro
     await page.locator("#puzzle-answer").fill(answer);
     await page.getByRole("button", { name: "Submit answer", exact: true }).click();
     await page.waitForFunction(submitted =>
-      document.querySelector(".feedback")?.textContent.includes("Not quite.") &&
+      document.querySelector(".feedback")?.textContent.trim() === "Incorrect" &&
       [...document.querySelectorAll(".attempt-list li")].at(-1)?.textContent === submitted,
     answer);
   }

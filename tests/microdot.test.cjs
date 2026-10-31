@@ -66,7 +66,7 @@ async function fixture(t, width = 1152, localFile = true, deviceScaleFactor = 1)
   }, { key: KEY, progress });
   const base = localFile ? pathToFileURL(path.join(ROOT, "index.html")).href : `${origin}/puzzle-26/index.html`;
   await page.goto(`${base}#/category/black`);
-  assert.deepEqual(await page.locator(".puzzle-name").allTextContents(), ["Very Weak", "ADFGVXCODE", "A Six-Foot Thick Wooden Door", "The Declaration of Independence"]);
+  assert.deepEqual(await page.locator(".puzzle-name").allTextContents(), ["Weak Password", "ADFGVXCODE", "A Six-Foot Thick Wooden Door", "The Declaration of Independence"]);
   await page.getByRole("button", { name: "ADFGVXCODE, common", exact: true }).click();
   await page.locator("#microdot-puzzle").waitFor();
   await page.waitForFunction(() => {
@@ -196,7 +196,7 @@ test("SHIFT solves Black 02; incorrect guesses, history, and other puzzles retai
   const page = await fixture(t);
   await page.locator("#puzzle-answer").fill("ANSWER");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector(".feedback").textContent.includes("Not quite."));
+  await page.waitForFunction(() => document.querySelector(".feedback").textContent.trim() === "Incorrect");
   await page.locator("#puzzle-answer").fill("shift");
   assert.equal(await page.locator("#puzzle-answer").inputValue(), "SHIFT");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();
@@ -219,12 +219,12 @@ test("SHIFT solves Black 02; incorrect guesses, history, and other puzzles retai
 test("other puzzles share the subtitle styling without inheriting a microdot", async t => {
   const page = await fixture(t);
   await page.locator("#back-button").click();
-  await page.getByRole("button", { name: "Very Weak, common, solved", exact: true }).click();
+  await page.getByRole("button", { name: "Weak Password, common, solved", exact: true }).click();
   await page.locator("#puzzle-statement").waitFor();
   assert.equal(await page.locator(".microdot-message, .microdot-image").count(), 0);
   assert.equal(await page.locator(".puzzle-subtitle").textContent(), "Julian blew my mind with this one back in the day");
   assert.equal(await page.locator(".puzzle-subtitle").evaluate(node => getComputedStyle(node).color), "rgb(243, 230, 197)");
-  assert.equal(await page.locator(".page-header > h1").textContent(), "Very Weak");
+  assert.equal(await page.locator(".page-header > h1").textContent(), "Weak Password");
   assert.equal(await page.locator(".page-header > h1").evaluate(node => getComputedStyle(node).color), "rgb(243, 230, 197)");
   assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), progress);
 });

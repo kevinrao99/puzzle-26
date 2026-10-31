@@ -279,7 +279,7 @@ const SITE_CONFIG = {
         statement: "2 Aether Hub\n4 Canyon Slough\n4 Dragonskull Summit\n14 Mountain\n1 Swamp\n4 Bomat Courier\n2 Glorybringer\n4 Goblin Chainwhirler\n2 Hazoret the Fervent\n2 Kari Zev, Skyship Raider\n2 Pia Nalaar\n2 Rekindling Phoenix\n4 Scrapheap Scrounger\n3 Abrade\n1 Cut // Ribbons\n2 Doomfall\n2 Magma Spray\n2 Chandra, Torch of Defiance\n2 Heart of Kiran\n1 Karn, Scion of Urza\n\nSIDEBOARD\n3 Chandra's Defeat\n1 Chandra, Torch of Defiance\n2 Doomfall\n2 Duress\n2 Karn, Scion of Urza\n1 Magma Spray\n1 Pia Nalaar\n1 Siege-Gang Commander\n1 Sorcerous Spyglass\n1 The Eldest Reborn",
       } : {}),
       ...(category.id === "black" && originalNumber === 1 ? {
-        name: "Very Weak",
+        name: "Weak Password",
         subtitle: "Julian blew my mind with this one back in the day",
         answerHash: ANSWER_HASHES.polyalphabetic,
         statementLayout: "aligned",

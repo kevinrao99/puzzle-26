@@ -51,7 +51,7 @@ async function fixture(t, width = 1152) {
 
 test("Black 03 displays the exact ECC statement without solution notes", async t => {
   const page = await fixture(t);
-  assert.deepEqual(await page.locator(".puzzle-name").allTextContents(), ["Very Weak", "ADFGVXCODE", "A Six-Foot Thick Wooden Door", "The Declaration of Independence"]);
+  assert.deepEqual(await page.locator(".puzzle-name").allTextContents(), ["Weak Password", "ADFGVXCODE", "A Six-Foot Thick Wooden Door", "The Declaration of Independence"]);
   await page.getByRole("button", { name: "A Six-Foot Thick Wooden Door, uncommon", exact: true }).click();
   await page.locator("#puzzle-statement").waitFor();
   assert.ok(page.url().endsWith("#/puzzle/black-3"));
@@ -76,7 +76,7 @@ test("ECC rejects the placeholder answer, accepts the requested digits, and pres
     await page.locator("#puzzle-answer").fill(answer);
     await page.getByRole("button", { name: "Submit answer", exact: true }).click();
     await page.waitForFunction(submittedAnswer =>
-      document.querySelector(".feedback")?.textContent.includes("Not quite.") &&
+      document.querySelector(".feedback")?.textContent.trim() === "Incorrect" &&
       [...document.querySelectorAll(".attempt-list li")].at(-1)?.textContent === submittedAnswer,
     answer);
     assert.equal(await page.getByRole("button", { name: "Submit answer", exact: true }).textContent(), "→");

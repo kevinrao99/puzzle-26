@@ -42,7 +42,7 @@ async function fixture(t, width = 1152) {
     assert.deepEqual(errors, []);
     assert.deepEqual(unexpectedRequests, [], "no Notion or grading requests");
   });
-  assert.deepEqual(await page.locator(".puzzle-name").allTextContents(), ["Very Weak", "ADFGVXCODE", "A Six-Foot Thick Wooden Door", "The Declaration of Independence"]);
+  assert.deepEqual(await page.locator(".puzzle-name").allTextContents(), ["Weak Password", "ADFGVXCODE", "A Six-Foot Thick Wooden Door", "The Declaration of Independence"]);
   const button = page.getByRole("button", { name: "The Declaration of Independence, rare", exact: true });
   assert.equal(await button.isEnabled(), true, "no unrequested prerequisite added");
   await button.click();
@@ -81,7 +81,7 @@ test("ESPIONAGE solves The Declaration of Independence, rejects ANSWER, and pres
   const page = await fixture(t);
   await page.locator("#puzzle-answer").fill("ANSWER");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector(".feedback").textContent.includes("Not quite."));
+  await page.waitForFunction(() => document.querySelector(".feedback").textContent.trim() === "Incorrect");
   await page.locator("#puzzle-answer").fill("espionage");
   assert.equal(await page.locator("#puzzle-answer").inputValue(), "ESPIONAGE");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();

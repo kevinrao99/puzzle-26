@@ -104,7 +104,7 @@ for (const width of [1152, 320]) {
       ["blue", 2, "blue-4", "Double Trouble", "common"],
       ["blue", 3, "blue-2", "Endless Gacha", "uncommon"],
       ["blue", 4, "blue-3", "Fields of Knowledge", "rare"],
-      ["black", 1, "black-1", "Very Weak", "common"],
+      ["black", 1, "black-1", "Weak Password", "common"],
       ["black", 3, "black-3", "A Six-Foot Thick Wooden Door", "uncommon"],
       ["black", 4, "black-4", "The Declaration of Independence", "rare"],
       ["red", 1, "red-3", "Aspire for Greatness", "common"],

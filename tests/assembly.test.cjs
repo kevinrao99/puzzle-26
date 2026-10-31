@@ -152,7 +152,7 @@ for (const fromServer of [false, true]) test(`Green 02 integration preserves pro
   await page.locator(`[data-piece="${id}"]`).focus(); await page.keyboard.press("e");
   const edited = await state(page, true);
   await page.locator("#puzzle-answer").fill("WRONG"); await page.getByRole("button", { name: "Submit answer", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector(".feedback").textContent.includes("Not quite"));
+  await page.waitForFunction(() => document.querySelector(".feedback").textContent.trim() === "Incorrect");
   await page.locator(".assembly-piece").first().waitFor();
   assert.deepEqual(await state(page, true), edited);
   await page.locator("#back-button").click(); await page.locator(".assembly-stage").waitFor({ state: "detached" });

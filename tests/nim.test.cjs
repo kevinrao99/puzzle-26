@@ -168,7 +168,7 @@ test("MAYNARD solves Blue 01 through the normal answer form and preserves other 
   const { page } = await fixture(t, true);
   await page.locator("#puzzle-answer").fill("ANSWER");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector(".feedback").textContent.includes("Not quite."));
+  await page.waitForFunction(() => document.querySelector(".feedback").textContent.trim() === "Incorrect");
   await page.locator("#puzzle-answer").fill("mAy-nArD!");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();
   await page.locator(".correct-attempt").waitFor();

@@ -122,7 +122,7 @@ test("PATRICK solves White 01 and preserves attempts and unrelated progress", as
   const page = await fixture(t);
   await page.locator("#puzzle-answer").fill("ANSWER");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector(".feedback").textContent.includes("Not quite."));
+  await page.waitForFunction(() => document.querySelector(".feedback").textContent.trim() === "Incorrect");
   await page.locator("#puzzle-answer").fill("patrick");
   assert.equal(await page.locator("#puzzle-answer").inputValue(), "PATRICK");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();

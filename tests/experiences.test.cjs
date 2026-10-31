@@ -93,7 +93,7 @@ test("124 solves Red 02 through normal answer verification and preserves other p
     await page.locator("#puzzle-answer").fill(answer);
     await page.locator("#puzzle-answer").press("Enter");
     await page.waitForFunction(answer =>
-      document.querySelector(".feedback")?.textContent.includes("Not quite.") &&
+      document.querySelector(".feedback")?.textContent.trim() === "Incorrect" &&
       [...document.querySelectorAll(".attempt-list li")].at(-1)?.textContent === answer,
     answer);
   }

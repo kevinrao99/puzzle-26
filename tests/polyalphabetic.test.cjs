@@ -40,7 +40,7 @@ async function fixture(t, width = 1152) {
     assert.deepEqual(errors, []);
     assert.deepEqual(unexpectedRequests, [], "no Notion or grading requests");
   });
-  await page.getByRole("button", { name: "Very Weak, common", exact: true }).click();
+  await page.getByRole("button", { name: "Weak Password, common", exact: true }).click();
   await page.locator("#puzzle-statement").waitFor();
   return page;
 }
@@ -49,7 +49,7 @@ for (const width of [1152, 320]) {
   test("Black 01 preserves exact text and character alignment at " + width + "px", async t => {
     const page = await fixture(t, width);
     assert.ok(page.url().endsWith("#/puzzle/black-1"));
-    assert.equal(await page.locator("h1").textContent(), "Very Weak");
+    assert.equal(await page.locator("h1").textContent(), "Weak Password");
     const statement = page.locator("#puzzle-statement");
     assert.equal(await statement.inputValue(), STATEMENT);
     assert.equal(await statement.isEditable(), false);
@@ -102,7 +102,7 @@ test("Black 01 accepts LANDS, rejects ANSWER, and retains history on reload", as
   const page = await fixture(t);
   await page.locator("#puzzle-answer").fill("ANSWER");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector(".feedback").textContent.includes("Not quite."));
+  await page.waitForFunction(() => document.querySelector(".feedback").textContent.trim() === "Incorrect");
   await page.locator("#puzzle-answer").fill("lands");
   assert.equal(await page.locator("#puzzle-answer").inputValue(), "LANDS");
   await page.getByRole("button", { name: "Submit answer", exact: true }).click();

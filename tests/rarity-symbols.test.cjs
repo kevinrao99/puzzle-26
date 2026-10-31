@@ -161,7 +161,7 @@ for (const width of [1152, 320]) {
   test(`puzzle headings omit symbols and color labels, titles omit numbering, and back keeps progress (${width}px)`, async t => {
     const page = await fixture(t, width);
     await page.getByRole("button", { name: "Open BLACK category", exact: true }).click();
-    for (const [name, tier, id] of [["Very Weak", "common", "black-1"], ["A Six-Foot Thick Wooden Door", "uncommon", "black-3"], ["The Declaration of Independence", "rare", "black-4"]]) {
+    for (const [name, tier, id] of [["Weak Password", "common", "black-1"], ["A Six-Foot Thick Wooden Door", "uncommon", "black-3"], ["The Declaration of Independence", "rare", "black-4"]]) {
       await page.getByRole("button", { name: `${name}, ${tier}`, exact: true }).click();
       await page.locator("h1").waitFor();
       assert.ok(page.url().endsWith(`#/puzzle/${id}`));

@@ -629,7 +629,7 @@ test("egg machine respects reduced motion and mobile width, leaving normal answe
   assert.equal(await page.locator(".egg-machine-stage").getAttribute("data-phase"), "complete");
   await page.locator("#puzzle-answer").fill("answer");
   await page.locator("#puzzle-answer-form button").click();
-  await page.waitForFunction(() => document.querySelector('.feedback[data-type="error"]')?.textContent.includes("Not quite"));
+  await page.waitForFunction(() => document.querySelector('.feedback[data-type="error"]')?.textContent.trim() === "Incorrect");
   assert.equal(await page.locator(".lede").count(), 0);
   await page.locator("#puzzle-answer").fill("  keEl!  ");
   assert.equal(await page.locator("#puzzle-answer").inputValue(), "  KEEL  ");
