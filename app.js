@@ -265,7 +265,7 @@ const SITE_CONFIG = {
       } : {}),
       ...(category.id === "blue" && originalNumber === 4 ? {
         name: "Double Trouble",
-        subtitle: "It would be so cringe if you cheated on this one",
+        subtitle: "Time to redeem yourself a decade later",
         grading: DOUBLE_IMPERFECT_SCORE_GRADING,
         answerHash: ANSWER_HASHES.doubleImperfectScore,
       } : {}),
