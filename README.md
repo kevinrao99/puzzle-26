@@ -45,11 +45,13 @@ fresh attempt, including after a previous full score.
 
 The browser-side identity gate is part of the hunt, not a security boundary.
 
-White is available first. Completing all four puzzles in each color reveals the
-next color in order: White → Blue → Black → Red → Green. All preceding colors
-must remain complete. Phyrexian appears after all 20 color puzzles are solved;
-its three puzzles stay visible but unlock sequentially. Envelope tasks do not
-add completion requirements. These rules use existing local progress without
+White and Blue are available first. The first two unfinished colors in the order
+White → Blue → Black → Red → Green stay available. Completing all four puzzles
+in either available color reveals the next unfinished color; completed colors
+remain accessible. Once only one unfinished color remains, only that color is
+left to work on. Phyrexian appears after all 20 color puzzles are solved; its
+three puzzles stay visible but unlock sequentially. Envelope tasks do not add
+completion requirements. These rules use existing local progress without
 resetting it, and direct links respect the same locks.
 
 Code submissions use a separate authenticated HTTPS grading service.

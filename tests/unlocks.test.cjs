@@ -13,9 +13,11 @@ const ROOT = path.resolve(__dirname, "..");
 const KEY = "puzzle-26:v1:progress";
 const COLORS = ["white", "blue", "black", "red", "green"];
 const ALL_IDS = COLORS.flatMap(color => [1, 2, 3, 4].map(number => `${color}-${number}`));
-const completedColors = count => ({ version: 1, identityVerified: true, puzzles: Object.fromEntries(
-  ALL_IDS.slice(0, count * 4).map(id => [id, { solved: true, attempts: [] }]),
+const completedColorIds = colorIds => ({ version: 1, identityVerified: true, puzzles: Object.fromEntries(
+  colorIds.flatMap(color => [1, 2, 3, 4].map(number => `${color}-${number}`))
+    .map(id => [id, { solved: true, attempts: [] }]),
 ) });
+const completedColors = count => completedColorIds(COLORS.slice(0, count));
 let browser, server, origin;
 
 before(async () => {
@@ -86,13 +88,13 @@ async function snapshot(page, name) {
 }
 
 for (const width of [1152, 320]) {
-  test(`all six cumulative stages hide locked sections and retain circle positions (${width}px)`, async t => {
+  test(`two-color progression hides locked sections and retains circle positions (${width}px)`, async t => {
     const page = await fixture(t, { width });
     const positions = {};
     for (let count = 0; count <= 5; count++) {
       const progress = completedColors(count);
       await setProgress(page, progress);
-      const expected = [...COLORS.slice(0, Math.min(count + 1, 5)), ...(count === 5 ? ["phyrexian"] : [])];
+      const expected = [...COLORS.slice(0, Math.min(count + 2, 5)), ...(count === 5 ? ["phyrexian"] : [])];
       assert.deepEqual(await visibleCategories(page), expected);
       assert.equal(await page.locator("#category-grid button:disabled").count(), 0, "locked categories are omitted, not disabled placeholders");
       for (const color of expected) {
@@ -107,16 +109,42 @@ for (const width of [1152, 320]) {
   });
 }
 
-test("each of the 20 prerequisites matters, even with out-of-order saved solves", async t => {
+test("all 32 completion combinations expose only the first two unfinished colors and retain completed colors", async t => {
+  const page = await fixture(t);
+  for (let mask = 0; mask < 2 ** COLORS.length; mask++) {
+    const completed = COLORS.filter((color, index) => mask & (1 << index));
+    const unfinished = COLORS.filter(color => !completed.includes(color));
+    const progress = completedColorIds(completed);
+    await setProgress(page, progress);
+    const visible = await visibleCategories(page);
+    assert.deepEqual(visible.filter(color => !completed.includes(color) && color !== "phyrexian"), unfinished.slice(0, 2), `active colors for mask ${mask}`);
+    assert.ok(completed.every(color => visible.includes(color)), `completed colors for mask ${mask}`);
+    assert.equal(visible.includes("phyrexian"), completed.length === 5, `Phyrexian for mask ${mask}`);
+    assert.equal(await page.locator("#category-grid button:disabled").count(), 0);
+    assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), progress);
+  }
+});
+
+test("each of the 20 puzzles is required for Phyrexian, without hiding completed colors", async t => {
   const page = await fixture(t);
   for (const id of ALL_IDS) {
     const progress = completedColors(5);
     progress.puzzles[id] = { solved: false, attempts: ["WRONG"], grading: { parts: {} } };
     await setProgress(page, progress);
-    const colorIndex = COLORS.indexOf(id.split("-")[0]);
-    assert.deepEqual(await visibleCategories(page), COLORS.slice(0, colorIndex + 1), id);
+    assert.deepEqual(await visibleCategories(page), COLORS, id);
     assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), progress);
   }
+});
+
+test("partial completion across all five colors does not unlock a third color", async t => {
+  const page = await fixture(t);
+  const progress = completedColors(5);
+  for (const color of COLORS) {
+    progress.puzzles[`${color}-4`] = { solved: false, attempts: ["WRONG"] };
+  }
+  await setProgress(page, progress);
+  assert.deepEqual(await visibleCategories(page), ["white", "blue"]);
+  assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), progress);
 });
 
 test("an available color exposes all four puzzles without extra task requirements", async t => {
@@ -132,16 +160,16 @@ test("an available color exposes all four puzzles without extra task requirement
   }
 });
 
-test("solving White's fourth puzzle unlocks Blue immediately and survives reload", async t => {
+test("solving White's fourth puzzle unlocks Black immediately and survives reload", async t => {
   const progress = completedColors(1);
   progress.puzzles["white-4"] = { solved: false, attempts: [] };
   const page = await fixture(t, { progress, hosted: false });
-  assert.deepEqual(await visibleCategories(page), ["white"]);
+  assert.deepEqual(await visibleCategories(page), ["white", "blue"]);
   await go(page, "/puzzle/white-4");
   await page.locator("#puzzle-answer").fill("WRONG");
   await page.locator("#puzzle-answer").press("Enter");
   await page.getByText("Incorrect", { exact: true }).waitFor();
-  assert.equal(await page.evaluate(() => isUnlocked(findCategory("blue").unlock)), false);
+  assert.equal(await page.evaluate(() => isUnlocked(findCategory("black").unlock)), false);
   await page.locator("#puzzle-answer").fill("NOTRE DAME");
   await page.locator("#puzzle-answer").press("Enter");
   await page.locator(".correct-attempt").waitFor();
@@ -150,10 +178,39 @@ test("solving White's fourth puzzle unlocks Blue immediately and survives reload
   assert.equal(await page.locator(".task-envelope").count(), 2, "envelopes coexist with unlocking the next color");
   await page.locator("#back-button").click();
   await page.locator("#category-grid").waitFor();
-  assert.deepEqual(await visibleCategories(page), ["white", "blue"]);
+  assert.deepEqual(await visibleCategories(page), ["white", "blue", "black"]);
   await page.reload();
-  assert.deepEqual(await visibleCategories(page), ["white", "blue"]);
+  assert.deepEqual(await visibleCategories(page), ["white", "blue", "black"]);
   assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)).puzzles["white-4"].attempts, KEY), ["WRONG", "NOTRE DAME"]);
+});
+
+test("finishing Blue and then Black unlocks Red while White remains unfinished", async t => {
+  const progress = completedColorIds(["blue"]);
+  progress.puzzles["blue-4"] = { solved: false, attempts: [] };
+  progress.puzzles["white-1"] = { solved: false, attempts: ["WRONG"] };
+  const page = await fixture(t, { progress });
+  assert.deepEqual(await visibleCategories(page), ["white", "blue"]);
+
+  async function solve(puzzleId, answer) {
+    await go(page, `/puzzle/${puzzleId}`);
+    await page.locator("#puzzle-answer").fill(answer);
+    await page.locator("#puzzle-answer").press("Enter");
+    await page.locator(".correct-attempt").waitFor();
+    await go(page, "/");
+    await page.locator("#category-grid").waitFor();
+  }
+
+  await solve("blue-4", "GREEN");
+  assert.deepEqual(await visibleCategories(page), ["white", "blue", "black"]);
+  for (const [index, answer] of ["LANDS", "SHIFT", "174410441"].entries()) {
+    await solve(`black-${index + 1}`, answer);
+    assert.deepEqual(await visibleCategories(page), ["white", "blue", "black"]);
+  }
+  await solve("black-4", "ESPIONAGE");
+  assert.deepEqual(await visibleCategories(page), ["white", "blue", "black", "red"]);
+  await page.reload();
+  assert.deepEqual(await visibleCategories(page), ["white", "blue", "black", "red"]);
+  assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)).puzzles["white-1"], KEY), progress.puzzles["white-1"]);
 });
 
 for (const width of [1152, 320]) {
@@ -185,9 +242,9 @@ for (const width of [1152, 320]) {
 }
 
 test("deep links cannot open hidden sections or skip a locked Phyrexian puzzle", async t => {
-  const page = await fixture(t, { hosted: false, route: "/puzzle/blue-1" });
+  const page = await fixture(t, { hosted: false, route: "/puzzle/black-1" });
   await page.waitForURL(/#\/$/);
-  for (const category of [...COLORS.slice(1), "phyrexian"]) {
+  for (const category of [...COLORS.slice(2), "phyrexian"]) {
     for (const route of [`/category/${category}`, `/puzzle/${category}-1`]) {
       await go(page, route);
       await page.waitForURL(/#\/$/);
@@ -212,7 +269,16 @@ test("deep links cannot open hidden sections or skip a locked Phyrexian puzzle",
   assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), progress);
 });
 
-test("clearing progress restores the identity gate and then only White", async t => {
+test("Blue category and puzzle deep links work before White is solved", async t => {
+  const page = await fixture(t, { route: "/puzzle/blue-1" });
+  await page.locator('.puzzle-page[data-puzzle-id="blue-1"]').waitFor();
+  await go(page, "/category/blue");
+  await page.locator("#puzzle-list").waitFor();
+  assert.equal(await page.locator(".puzzle-button:enabled").count(), 4);
+  assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY), completedColors(0));
+});
+
+test("clearing progress restores the identity gate and then White and Blue", async t => {
   const page = await fixture(t, { progress: completedColors(5) });
   await page.getByRole("button", { name: "Open instructions", exact: true }).click();
   page.once("dialog", dialog => dialog.accept());
@@ -220,5 +286,5 @@ test("clearing progress restores the identity gate and then only White", async t
   await page.locator("#identity-answer").fill("BUM");
   await page.locator("#identity-answer").press("Enter");
   await page.locator("#category-grid").waitFor();
-  assert.deepEqual(await visibleCategories(page), ["white"]);
+  assert.deepEqual(await visibleCategories(page), ["white", "blue"]);
 });

@@ -70,6 +70,10 @@ const CATEGORY_DEFINITIONS = [
   },
 ];
 
+const COLOR_IDS = CATEGORY_DEFINITIONS
+  .filter(category => category.id !== "phyrexian")
+  .map(category => category.id);
+
 // Reconstructed title translations from chat 01a1676b-ca5b-7932-aa40-74f4ea79c981.
 // English names are authoring metadata, not captions or accessible translations.
 const PHYREXIAN_PUZZLE_TITLES = [
@@ -168,12 +172,15 @@ const PUZZLE_TASKS = Object.freeze({
 });
 
 const SITE_CONFIG = {
-  categories: CATEGORY_DEFINITIONS.map((category, categoryIndex) => ({
+  categories: CATEGORY_DEFINITIONS.map(category => ({
     ...category,
-    // Every earlier color must be complete; Phyrexian follows all five colors.
-    unlock: categoryIndex === 0 ? { type: "always" } : {
+    // Keep two unfinished colors available; Phyrexian requires all five colors.
+    unlock: category.id === "phyrexian" ? {
       type: "allCategoriesSolved",
-      categoryIds: CATEGORY_DEFINITIONS.slice(0, categoryIndex).map(item => item.id),
+      categoryIds: COLOR_IDS,
+    } : {
+      type: "twoUnfinishedColors",
+      categoryId: category.id,
     },
     lockedBehavior: "hidden",
     // Keep IDs stable when reordering so browser-local progress follows its puzzle.
@@ -545,6 +552,12 @@ async function getSolvedAnswer(puzzle, puzzleState) {
   return "";
 }
 
+function isCategorySolved(categoryId) {
+  const category = findCategory(categoryId);
+  return category?.puzzles.length > 0 &&
+    category.puzzles.every(puzzle => getPuzzleState(puzzle.id).solved);
+}
+
 function isUnlocked(rule) {
   if (!rule || rule.type === "always") {
     return true;
@@ -559,10 +572,17 @@ function isUnlocked(rule) {
   }
 
   if (rule.type === "allCategoriesSolved") {
-    return rule.categoryIds.every((id) => {
-      const category = findCategory(id);
-      return category?.puzzles.length > 0 && category.puzzles.every(puzzle => getPuzzleState(puzzle.id).solved);
-    });
+    return rule.categoryIds.every(isCategorySolved);
+  }
+
+  if (rule.type === "twoUnfinishedColors") {
+    // Completed colors remain accessible, including their task envelopes.
+    if (isCategorySolved(rule.categoryId)) return true;
+
+    const available = COLOR_IDS
+      .filter(id => !isCategorySolved(id))
+      .slice(0, 2);
+    return available.includes(rule.categoryId);
   }
 
   if (rule.type === "anySolvedCount") {
